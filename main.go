@@ -11,9 +11,9 @@ func main() {
 		AllowAllOrigins:  true,
 		AllowCredentials: true,
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"*"},
-		AllowHeaders:     []string{"*"},
-		ExposeHeaders:    []string{"Content-Length"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Content-Type"},
+		//ExposeHeaders:    []string{"Content-Length"},
 	}))
 	rc := &controller.RoadmapController{}
 	web.Get("/roadmap", rc.GetRoadmap)

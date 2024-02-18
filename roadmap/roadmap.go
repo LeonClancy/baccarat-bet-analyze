@@ -30,9 +30,9 @@ type CockroachRoad struct {
 }
 
 type Roadmap struct {
-	BeadPlate     *BeadPlate     `json:"bead_plate"`
-	BigRoad       *BigRoad       `json:"big_road"`
-	BigEyeRoad    *BigEyeRoad    `json:"big_eye_road"`
-	SmallRoad     *SmallRoad     `json:"small_road"`
-	CockroachRoad *CockroachRoad `json:"cockroach_road"`
+	BeadPlate     *BeadPlate     `json:"beadPlate"`
+	BigRoad       *BigRoad       `json:"bigRoad"`
+	BigEyeRoad    *BigEyeRoad    `json:"bigEyeRoad"`
+	SmallRoad     *SmallRoad     `json:"smallRoad"`
+	CockroachRoad *CockroachRoad `json:"cockroachRoad"`
 }

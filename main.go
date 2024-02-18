@@ -9,10 +9,11 @@ import (
 func main() {
 	web.InsertFilter("*", web.BeforeRouter, cors.Allow(&cors.Options{
 		AllowAllOrigins:  true,
+		AllowCredentials: true,
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"*"},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
 	}))
 	rc := &controller.RoadmapController{}
 	web.Get("/roadmap", rc.GetRoadmap)

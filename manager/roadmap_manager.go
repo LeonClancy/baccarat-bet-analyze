@@ -8,10 +8,11 @@ import (
 )
 
 type RoadmapManager struct {
-	mutex        sync.RWMutex
-	Roadmaps     *roadmap.Roadmap `json:"roadmaps"`
-	previousMaps *roadmap.Roadmap
-	Name         string `json:"name"`
+	mutex         sync.RWMutex
+	Roadmaps      *roadmap.Roadmap `json:"roadmaps"`
+	previousMaps  *roadmap.Roadmap
+	Name          string `json:"name"`
+	ResultCounter *roadmap.RoadmapsResultCount
 }
 
 func NewRoadmapManager(name string) *RoadmapManager {
@@ -74,6 +75,28 @@ func NewRoadmapManager(name string) *RoadmapManager {
 						Blocks: []*roadmap.Block{},
 					},
 				},
+			},
+		},
+		ResultCounter: &roadmap.RoadmapsResultCount{
+			BigRoadCounts: &roadmap.Result{
+				TieCount:    0,
+				PlayerCount: 0,
+				BankerCount: 0,
+			},
+			BigEyeRoadCounts: &roadmap.Result{
+				TieCount:    0,
+				PlayerCount: 0,
+				BankerCount: 0,
+			},
+			SmallRoadCounts: &roadmap.Result{
+				TieCount:    0,
+				PlayerCount: 0,
+				BankerCount: 0,
+			},
+			CockroachRoadCounts: &roadmap.Result{
+				TieCount:    0,
+				PlayerCount: 0,
+				BankerCount: 0,
 			},
 		},
 	}
@@ -259,6 +282,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 			symbol == roadmap.Symbol_TieAndPlayerPair ||
 			symbol == roadmap.Symbol_TieAndBankerPair ||
 			symbol == roadmap.Symbol_TieAndBothPair {
+			r.ResultCounter.BigRoadCounts.TieCount++
 			bigRoad.Columns[0].Blocks = append(bigRoad.Columns[0].Blocks, &roadmap.Block{
 				Symbol:   symbol,
 				TieCount: 1,
@@ -278,6 +302,8 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 		symbol == roadmap.Symbol_TieAndPlayerPair ||
 		symbol == roadmap.Symbol_TieAndBankerPair ||
 		symbol == roadmap.Symbol_TieAndBothPair {
+
+		r.ResultCounter.BigRoadCounts.TieCount++
 
 		lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
 		lastBlock.TieCount++
@@ -321,6 +347,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 		symbol == roadmap.Symbol_BankerAndBankerPair ||
 		symbol == roadmap.Symbol_BankerAndPlayerPair ||
 		symbol == roadmap.Symbol_BankerAndBothPair {
+		r.ResultCounter.BigRoadCounts.BankerCount++
 		if lastColumnLastBlock.Symbol == roadmap.Symbol_Tie ||
 			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndBankerPair ||
 			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndPlayerPair ||
@@ -368,6 +395,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 		symbol == roadmap.Symbol_PlayerAndBankerPair ||
 		symbol == roadmap.Symbol_PlayerAndPlayerPair ||
 		symbol == roadmap.Symbol_PlayerAndBothPair {
+		r.ResultCounter.BigRoadCounts.PlayerCount++
 		if lastColumnLastBlock.Symbol == roadmap.Symbol_Tie ||
 			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndBankerPair ||
 			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndPlayerPair ||
@@ -440,6 +468,7 @@ func (r *RoadmapManager) drawBigEyeRoad(block roadmap.Symbol) {
 		// 比對前一列和前二列的結果位置是齊整，則於大眼路畫紅圈。
 		if len(bigRoad.Columns[len(bigRoad.Columns)-2].Blocks) ==
 			len(bigRoad.Columns[len(bigRoad.Columns)-3].Blocks) {
+			r.ResultCounter.BigEyeRoadCounts.BankerCount++
 			r.bigEyeRoadNewBlock(bigEyeRoadLatestColumn, bigEyeRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Banker,
 				TieCount: 0,
@@ -447,6 +476,7 @@ func (r *RoadmapManager) drawBigEyeRoad(block roadmap.Symbol) {
 			return
 		} else {
 			// 以大路最新的結果，比對前一列與前二列的結果位置是不齊整，則於大眼路畫藍圈
+			r.ResultCounter.BigEyeRoadCounts.PlayerCount++
 			r.bigEyeRoadNewBlock(bigEyeRoadLatestColumn, bigEyeRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Player,
 				TieCount: 0,
@@ -458,6 +488,7 @@ func (r *RoadmapManager) drawBigEyeRoad(block roadmap.Symbol) {
 		diff := len(bigRoadLatestColumn.Blocks) - len(bigRoad.Columns[len(bigRoad.Columns)-2].Blocks)
 		if diff == 1 {
 			// 以大路最新的結果，水平方向跟前一列作對比，如前一列無結果，則於大眼路畫藍圈
+			r.ResultCounter.BigEyeRoadCounts.PlayerCount++
 			r.bigEyeRoadNewBlock(bigEyeRoadLatestColumn, bigEyeRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Player,
 				TieCount: 0,
@@ -466,6 +497,7 @@ func (r *RoadmapManager) drawBigEyeRoad(block roadmap.Symbol) {
 		}
 		// 以大路最新的結果，水平方向跟前一列作對比，如前一列有結果，則於大眼路畫紅圈
 		// 以大路最新的結果，水平方向跟前一列作對比，如前一列的前二行或以上都無結果，則於大眼路畫紅圈
+		r.ResultCounter.BigEyeRoadCounts.BankerCount++
 		r.bigEyeRoadNewBlock(bigEyeRoadLatestColumn, bigEyeRoad, &roadmap.Block{
 			Symbol:   roadmap.Symbol_Banker,
 			TieCount: 0,
@@ -503,6 +535,7 @@ func (r *RoadmapManager) drawSmallEyeRoad(block roadmap.Symbol) {
 		if len(bigRoad.Columns[len(bigRoad.Columns)-2].Blocks) ==
 			len(bigRoad.Columns[len(bigRoad.Columns)-4].Blocks) {
 			// 以大路最新的結果，比對前一列與前三列結果位置是齊整，則於小路畫紅點。
+			r.ResultCounter.SmallRoadCounts.BankerCount++
 			r.smallRoadNewBlock(smallRoadLatestColumn, smallRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Banker,
 				TieCount: 0,
@@ -510,6 +543,7 @@ func (r *RoadmapManager) drawSmallEyeRoad(block roadmap.Symbol) {
 			return
 		} else {
 			// 以大路最新的結果，對比前一列與前三列的位置是不齊整，則於小路畫藍點。
+			r.ResultCounter.SmallRoadCounts.PlayerCount++
 			r.smallRoadNewBlock(smallRoadLatestColumn, smallRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Player,
 				TieCount: 0,
@@ -521,6 +555,7 @@ func (r *RoadmapManager) drawSmallEyeRoad(block roadmap.Symbol) {
 		diff := len(bigRoad.Columns[len(bigRoad.Columns)-1].Blocks) - len(bigRoad.Columns[len(bigRoad.Columns)-3].Blocks)
 		if diff == 1 {
 			// 以大路最新的結果，對比前一列與前三列的位置是不齊整，則於小路畫藍點。
+			r.ResultCounter.SmallRoadCounts.PlayerCount++
 			r.smallRoadNewBlock(smallRoadLatestColumn, smallRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Player,
 				TieCount: 0,
@@ -529,6 +564,7 @@ func (r *RoadmapManager) drawSmallEyeRoad(block roadmap.Symbol) {
 		} else {
 			// 以大路最新的結果，水平方向跟前二列作對比，前二列有結果時，則於小路畫紅點。
 			// 以大路最新的結果，水平方向跟前二列作對比，如前二列的前二行或以上都無結果，則於小路畫紅點。
+			r.ResultCounter.SmallRoadCounts.BankerCount++
 			r.smallRoadNewBlock(smallRoadLatestColumn, smallRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Banker,
 				TieCount: 0,
@@ -567,6 +603,7 @@ func (r *RoadmapManager) drawCockroachRoad(block roadmap.Symbol) {
 		if len(bigRoad.Columns[len(bigRoad.Columns)-2].Blocks) ==
 			len(bigRoad.Columns[len(bigRoad.Columns)-5].Blocks) {
 			// 以大路最新的結果，對比前一列與前四列結果位置是齊整，則於小強路畫紅色斜線。
+			r.ResultCounter.CockroachRoadCounts.BankerCount++
 			r.cockroachRoadNewBlock(cockroachRoadLatestColumn, cockroachRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Banker,
 				TieCount: 0,
@@ -574,6 +611,7 @@ func (r *RoadmapManager) drawCockroachRoad(block roadmap.Symbol) {
 			return
 		} else {
 			// 以大路最新的結果，對比前一列與前四列結果位置是不齊整，則於大眼路畫藍色斜線。
+			r.ResultCounter.CockroachRoadCounts.PlayerCount++
 			r.cockroachRoadNewBlock(cockroachRoadLatestColumn, cockroachRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Player,
 				TieCount: 0,
@@ -585,6 +623,7 @@ func (r *RoadmapManager) drawCockroachRoad(block roadmap.Symbol) {
 		diff := len(bigRoad.Columns[len(bigRoad.Columns)-1].Blocks) - len(bigRoad.Columns[len(bigRoad.Columns)-4].Blocks)
 		if diff == 1 {
 			// 以大路最新的結果，水平方向跟前三列作對比，如前三列無結果，則於小強路畫藍色斜線。
+			r.ResultCounter.CockroachRoadCounts.PlayerCount++
 			r.cockroachRoadNewBlock(cockroachRoadLatestColumn, cockroachRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Player,
 				TieCount: 0,
@@ -593,6 +632,7 @@ func (r *RoadmapManager) drawCockroachRoad(block roadmap.Symbol) {
 		} else {
 			// 以大路最新的結果，水平方向跟前三列作對比，如前三列的前二行或以上都無結果，則於小強路畫紅色斜線。
 			// 以大路最新的結果，水平方向跟前三列作對比，前三列有結果時，則於小強路畫紅色斜線。
+			r.ResultCounter.CockroachRoadCounts.BankerCount++
 			r.cockroachRoadNewBlock(cockroachRoadLatestColumn, cockroachRoad, &roadmap.Block{
 				Symbol:   roadmap.Symbol_Banker,
 				TieCount: 0,

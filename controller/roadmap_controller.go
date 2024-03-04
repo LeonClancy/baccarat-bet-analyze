@@ -79,6 +79,7 @@ func (r *RoadmapController) Draw(ctx *context.Context) {
 	manager.Draw(results)
 	response := gmap.New()
 	response.Set("roadmaps", manager.Roadmaps)
+	response.Set("result_counter", manager.ResultCounter)
 	err := ctx.Output.JSON(response, false, true)
 	if err != nil {
 		response := gmap.New()

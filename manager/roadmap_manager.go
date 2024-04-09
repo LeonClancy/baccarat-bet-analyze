@@ -13,6 +13,7 @@ type RoadmapManager struct {
 	previousMaps  *roadmap.Roadmap
 	Name          string `json:"name"`
 	ResultCounter *roadmap.RoadmapsResultCount
+	AnalyzeManager *AnalyzeManager
 }
 
 func NewRoadmapManager(name string) *RoadmapManager {
@@ -99,6 +100,7 @@ func NewRoadmapManager(name string) *RoadmapManager {
 				BankerCount: 0,
 			},
 		},
+		AnalyzeManager: NewAnalyzeManager(),
 	}
 }
 
@@ -945,5 +947,4 @@ func (r *RoadmapManager) Restore() {
 		r.Roadmaps.CockroachRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.previousMaps.CockroachRoad.Columns[i].Blocks))
 		copy(r.Roadmaps.CockroachRoad.Columns[i].Blocks, r.previousMaps.CockroachRoad.Columns[i].Blocks)
 	}
-
 }

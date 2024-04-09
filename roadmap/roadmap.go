@@ -3,10 +3,12 @@ package roadmap
 type Block struct {
 	Symbol   Symbol `json:"symbol"`
 	TieCount int32  `json:"tieCount"`
+	Result   int32  `json:"result"`
 }
 
 type Column struct {
 	Blocks []*Block `json:"blocks"`
+	Result int32    `json:"result"`
 }
 
 type BeadPlate struct {

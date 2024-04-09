@@ -20,5 +20,9 @@ func main() {
 	web.Post("/roadmap", rc.NewRoadmap)
 	web.Get("/roadmap/:id", rc.GetRoadmapById)
 	web.Patch("/roadmap/:id", rc.Draw)
+
+	web.Get("/roadmap/patterns", rc.GetPatterns)
+	web.Patch("/roadmap/:id/patterns", rc.SetPatterns)
+
 	web.Run()
 }

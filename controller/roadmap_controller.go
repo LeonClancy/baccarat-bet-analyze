@@ -85,6 +85,7 @@ func (r *RoadmapController) Draw(ctx *context.Context) {
 	response := gmap.New()
 	response.Set("roadmaps", manager.Roadmaps)
 	response.Set("result_counter", manager.ResultCounter)
+	response.Set("predictions", manager.AnalyzeManager.Predictions)
 	err := ctx.Output.JSON(response, false, true)
 	if err != nil {
 		response := gmap.New()
@@ -149,6 +150,7 @@ func (r *RoadmapController) SetPatterns(ctx *context.Context) {
 	response.Set("pattern1", pattern1Str)
 	response.Set("pattern2", pattern2Str)
 	response.Set("roadmaps", manager.Roadmaps)
+	response.Set("predictions", manager.AnalyzeManager.Predictions)
 	err := ctx.Output.JSON(response, false, true)
 	if err != nil {
 		response := gmap.New()

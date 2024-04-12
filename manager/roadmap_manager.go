@@ -21,6 +21,9 @@ func NewRoadmapManager(name string) *RoadmapManager {
 		Name:  name,
 		mutex: sync.RWMutex{},
 		Roadmaps: &roadmap.Roadmap{
+			TotalRoad: &roadmap.BigRoad{
+				Columns: []*roadmap.Column{},
+			},
 			BeadPlate: &roadmap.BeadPlate{
 				Blocks: []*roadmap.Block{},
 			},
@@ -150,6 +153,7 @@ func (r *RoadmapManager) Draw(results []dealer.Result) {
 	r.drawBigEyeRoad(symbol)
 	r.drawSmallEyeRoad(symbol)
 	r.drawCockroachRoad(symbol)
+	r.copyBigRoad2TotalRoad()
 }
 
 func (r *RoadmapManager) Print() *roadmap.Roadmap {
@@ -946,5 +950,15 @@ func (r *RoadmapManager) Restore() {
 		}
 		r.Roadmaps.CockroachRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.previousMaps.CockroachRoad.Columns[i].Blocks))
 		copy(r.Roadmaps.CockroachRoad.Columns[i].Blocks, r.previousMaps.CockroachRoad.Columns[i].Blocks)
+	}
+}
+
+func (r *RoadmapManager) copyBigRoad2TotalRoad() {
+	bigRoad := r.Roadmaps.BigRoad
+	totalRoad := r.Roadmaps.TotalRoad
+	for i := range bigRoad.Columns {
+		totalRoad.Columns = append(totalRoad.Columns, &roadmap.Column{})
+		totalRoad.Columns[i].Blocks = make([]*roadmap.Block, len(bigRoad.Columns[i].Blocks))
+		copy(totalRoad.Columns[i].Blocks, bigRoad.Columns[i].Blocks)
 	}
 }

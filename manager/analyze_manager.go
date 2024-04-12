@@ -53,6 +53,13 @@ func NewAnalyzeManager() *AnalyzeManager {
 }
 
 func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
+	for _, c := range roadmap.TotalRoad.Columns {
+		c.Result = 0
+		for _, b := range c.Blocks {
+			b.Result = 0
+		}
+	}
+
 	for _, c := range roadmap.BigRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {
@@ -130,6 +137,8 @@ func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 
 		m.Predictions.CockroachRoad.Bet = 1
 		m.Predictions.CockroachRoad.BetArea = 1
+
+		m.sumResultInTotalRoad(roadmap)
 	}
 
 	if m.Pattern2 == 2 {
@@ -179,4 +188,83 @@ func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 
 func GetPatterns() map[int]string {
 	return Patterns
+}
+
+func (m *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
+	if len(r.TotalRoad.Columns) == 0 {
+		return
+	}
+
+	for i := range r.BigRoad.Columns {
+		r.TotalRoad.Columns[i].Result += r.BigRoad.Columns[i].Result
+		for j := range r.BigRoad.Columns[i].Blocks {
+			if r.TotalRoad.Columns[i].Blocks[j] == nil {
+				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
+					Result: 0,
+				}
+			}
+			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigRoad.Columns[i].Blocks[j].Result
+		}
+	}
+
+	for i := range r.SmallRoad.Columns {
+		r.TotalRoad.Columns[i].Result += r.SmallRoad.Columns[i].Result
+		for j := range r.SmallRoad.Columns[i].Blocks {
+			if len(r.TotalRoad.Columns[i].Blocks) < len(r.SmallRoad.Columns[i].Blocks) {
+				r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{
+					Result: 0,
+				})
+			}
+			if r.TotalRoad.Columns[i].Blocks[j] == nil {
+				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
+					Result: 0,
+				}
+			}
+			r.TotalRoad.Columns[i].Blocks[j].Result += r.SmallRoad.Columns[i].Blocks[j].Result
+		}
+	}
+
+	for i := range r.BigEyeRoad.Columns {
+		if len(r.BigEyeRoad.Columns) > len(r.TotalRoad.Columns) {
+			r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{
+				Blocks: make([]*roadmap.Block, len(r.BigEyeRoad.Columns[i].Blocks)),
+			})
+		}
+		r.TotalRoad.Columns[i].Result += r.BigEyeRoad.Columns[i].Result
+		for j := range r.BigEyeRoad.Columns[i].Blocks {
+			if len(r.TotalRoad.Columns[i].Blocks) < len(r.BigEyeRoad.Columns[i].Blocks) {
+				r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{
+					Result: 0,
+				})
+			}
+			if r.TotalRoad.Columns[i].Blocks[j] == nil {
+				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
+					Result: 0,
+				}
+			}
+			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigEyeRoad.Columns[i].Blocks[j].Result
+		}
+	}
+
+	for i := range r.CockroachRoad.Columns {
+		if len(r.CockroachRoad.Columns) > len(r.TotalRoad.Columns) {
+			r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{
+				Blocks: make([]*roadmap.Block, len(r.CockroachRoad.Columns[i].Blocks)),
+			})
+		}
+		r.TotalRoad.Columns[i].Result += r.CockroachRoad.Columns[i].Result
+		for j := range r.CockroachRoad.Columns[i].Blocks {
+			if len(r.TotalRoad.Columns[i].Blocks) < len(r.CockroachRoad.Columns[i].Blocks) {
+				r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{
+					Result: 0,
+				})
+			}
+			if r.TotalRoad.Columns[i].Blocks[j] == nil {
+				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
+					Result: 0,
+				}
+			}
+			r.TotalRoad.Columns[i].Blocks[j].Result += r.CockroachRoad.Columns[i].Blocks[j].Result
+		}
+	}
 }

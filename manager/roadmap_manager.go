@@ -959,6 +959,11 @@ func (r *RoadmapManager) copyBigRoad2TotalRoad() {
 	for i := range bigRoad.Columns {
 		totalRoad.Columns = append(totalRoad.Columns, &roadmap.Column{})
 		totalRoad.Columns[i].Blocks = make([]*roadmap.Block, len(bigRoad.Columns[i].Blocks))
-		copy(totalRoad.Columns[i].Blocks, bigRoad.Columns[i].Blocks)
+		// copy only symbol
+		for j := range bigRoad.Columns[i].Blocks {
+			totalRoad.Columns[i].Blocks[j] = &roadmap.Block{
+				Symbol: bigRoad.Columns[i].Blocks[j].Symbol,
+			}
+		}
 	}
 }

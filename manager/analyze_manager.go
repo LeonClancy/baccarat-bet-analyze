@@ -139,73 +139,29 @@ func (m *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 	for i := range r.BigRoad.Columns {
 		r.TotalRoad.Columns[i].Result += r.BigRoad.Columns[i].Result
 		for j := range r.BigRoad.Columns[i].Blocks {
-			if r.TotalRoad.Columns[i].Blocks[j] == nil {
-				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
-					Result: 0,
-				}
-			}
 			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigRoad.Columns[i].Blocks[j].Result
 		}
 	}
 
-	for i := range r.SmallRoad.Columns {
-		r.TotalRoad.Columns[i].Result += r.SmallRoad.Columns[i].Result
-		for j := range r.SmallRoad.Columns[i].Blocks {
-			if len(r.TotalRoad.Columns[i].Blocks) < len(r.SmallRoad.Columns[i].Blocks) {
-				r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{
-					Result: 0,
-				})
-			}
-			if r.TotalRoad.Columns[i].Blocks[j] == nil {
-				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
-					Result: 0,
-				}
-			}
-			r.TotalRoad.Columns[i].Blocks[j].Result += r.SmallRoad.Columns[i].Blocks[j].Result
-		}
-	}
-
 	for i := range r.BigEyeRoad.Columns {
-		if len(r.BigEyeRoad.Columns) > len(r.TotalRoad.Columns) {
-			r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{
-				Blocks: make([]*roadmap.Block, len(r.BigEyeRoad.Columns[i].Blocks)),
-			})
-		}
 		r.TotalRoad.Columns[i].Result += r.BigEyeRoad.Columns[i].Result
-		for j := range r.BigEyeRoad.Columns[i].Blocks {
-			if len(r.TotalRoad.Columns[i].Blocks) < len(r.BigEyeRoad.Columns[i].Blocks) {
-				r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{
-					Result: 0,
-				})
+		// 如果統計路沒有該行，則要新增到該行
+		if len(r.TotalRoad.Columns) <= i {
+			colLenDiff := i - len(r.TotalRoad.Columns)
+			for k := 0; k < colLenDiff; k++ {
+				r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{})
 			}
-			if r.TotalRoad.Columns[i].Blocks[j] == nil {
-				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
-					Result: 0,
+		}
+		for j := range r.BigEyeRoad.Columns[i].Blocks {
+			// 如果統計路沒有該區塊，則要新增到該行該格的 result
+			if len(r.TotalRoad.Columns[i].Blocks) <= j {
+				blockDiff := j - len(r.TotalRoad.Columns[i].Blocks)
+				for k := 0; k < blockDiff; k++ {
+					r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{})
 				}
 			}
 			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigEyeRoad.Columns[i].Blocks[j].Result
 		}
 	}
 
-	for i := range r.CockroachRoad.Columns {
-		if len(r.CockroachRoad.Columns) > len(r.TotalRoad.Columns) {
-			r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{
-				Blocks: make([]*roadmap.Block, len(r.CockroachRoad.Columns[i].Blocks)),
-			})
-		}
-		r.TotalRoad.Columns[i].Result += r.CockroachRoad.Columns[i].Result
-		for j := range r.CockroachRoad.Columns[i].Blocks {
-			if len(r.TotalRoad.Columns[i].Blocks) < len(r.CockroachRoad.Columns[i].Blocks) {
-				r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{
-					Result: 0,
-				})
-			}
-			if r.TotalRoad.Columns[i].Blocks[j] == nil {
-				r.TotalRoad.Columns[i].Blocks[j] = &roadmap.Block{
-					Result: 0,
-				}
-			}
-			r.TotalRoad.Columns[i].Blocks[j].Result += r.CockroachRoad.Columns[i].Blocks[j].Result
-		}
-	}
 }

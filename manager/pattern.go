@@ -40,7 +40,7 @@ func (analyzeManger *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.Bi
 				bigEyeRoad.Columns[colIndex].Blocks[blockIndex].Result = -1
 			}
 			if colIndex > 0 && blockIndex == 0 {
-				bigEyeRoad.Columns[colIndex].Blocks[blockIndex].Result = 1
+				bigEyeRoad.Columns[colIndex].Blocks[blockIndex].Result = 16
 			}
 		}
 	}

@@ -20,7 +20,7 @@ func (analyzeManger *AnalyzeManager) PatternAInBigRoad(bigRoad *roadmap.BigRoad)
 		}
 	}
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns) - 1]
-	if len(lastColumn.Blocks) > 2 {
+	if len(lastColumn.Blocks) > 1 {
 		analyzeManger.Predictions.BigRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			analyzeManger.Predictions.BigRoad.BetArea = 2
@@ -45,7 +45,7 @@ func (analyzeManger *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.Bi
 		}
 	}
 	lastColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns) - 1]
-	if len(lastColumn.Blocks) > 2 {
+	if len(lastColumn.Blocks) > 1 {
 		analyzeManger.Predictions.BigEyeRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			analyzeManger.Predictions.BigEyeRoad.BetArea = 2
@@ -70,7 +70,7 @@ func (analyzeManger *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.Smal
 		}
 	}
 	lastColumn := smallRoad.Columns[len(smallRoad.Columns) - 1]
-	if len(lastColumn.Blocks) > 2 {
+	if len(lastColumn.Blocks) > 1 {
 		analyzeManger.Predictions.SmallRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			analyzeManger.Predictions.SmallRoad.BetArea = 2
@@ -95,7 +95,7 @@ func (analyzeManger *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *road
 		}
 	}
 	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns) - 1]
-	if len(lastColumn.Blocks) > 2 {
+	if len(lastColumn.Blocks) > 1 {
 		analyzeManger.Predictions.CockroachRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			analyzeManger.Predictions.CockroachRoad.BetArea = 2

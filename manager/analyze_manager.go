@@ -108,9 +108,11 @@ func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 func (m *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern int) {
 	if pattern == 1 {
 		m.AnalyzeWithPatternA(roadmap)
+		m.sumResultInTotalRoad(roadmap)
 	}
 	if pattern == 2 {
 		m.AnalyzeWithPatternB(roadmap)
+		m.sumResultInTotalRoad(roadmap)
 	}
 }
 

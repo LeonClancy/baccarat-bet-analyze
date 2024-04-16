@@ -118,6 +118,9 @@ func (m *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern in
 
 func (m *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
 	m.PatternAInBigRoad(roadmap.BigRoad)
+	m.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
+	m.PatternAInSmallRoad(roadmap.SmallRoad)
+	m.PatternAInCockroachRoad(roadmap.CockroachRoad)
 }
 
 func (m *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {

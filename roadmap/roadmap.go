@@ -17,18 +17,22 @@ type BeadPlate struct {
 
 type BigRoad struct {
 	Columns []*Column `json:"columns"`
+	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
 }
 
 type BigEyeRoad struct {
 	Columns []*Column `json:"columns"`
+	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
 }
 
 type SmallRoad struct {
 	Columns []*Column `json:"columns"`
+	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
 }
 
 type CockroachRoad struct {
 	Columns []*Column `json:"columns"`
+	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
 }
 
 type Roadmap struct {

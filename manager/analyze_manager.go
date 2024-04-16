@@ -96,94 +96,30 @@ func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 	m.Predictions.SmallRoad.BetArea = 0
 	m.Predictions.CockroachRoad.Bet = 0
 	m.Predictions.CockroachRoad.BetArea = 0
+
+	m.AnalyzeWithPattern(roadmap, m.Pattern1)
+	m.AnalyzeWithPattern(roadmap, m.Pattern2)
 	
-	if m.Pattern1 == 1 {
-		for _, c := range roadmap.BigRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 1
-				c.Result += b.Result
-			}
-		}
+	// m.sumResultInTotalRoad(roadmap)
 
-		m.Predictions.BigRoad.Bet = 1
-		m.Predictions.BigRoad.BetArea = 1
-
-		for _, c := range roadmap.BigEyeRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 1
-				c.Result += b.Result
-			}
-		}
-
-		m.Predictions.BigEyeRoad.Bet = 1
-		m.Predictions.BigEyeRoad.BetArea = 1
-
-		for _, c := range roadmap.SmallRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 1
-				c.Result += b.Result
-			}
-		}
-
-		m.Predictions.SmallRoad.Bet = 1
-		m.Predictions.SmallRoad.BetArea = 1
-
-		for _, c := range roadmap.CockroachRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 1
-				c.Result += b.Result
-			}
-		}
-
-		m.Predictions.CockroachRoad.Bet = 1
-		m.Predictions.CockroachRoad.BetArea = 1
-
-		m.sumResultInTotalRoad(roadmap)
-	}
-
-	if m.Pattern2 == 2 {
-		for _, c := range roadmap.BigRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 2
-				c.Result += b.Result
-			}
-		}
-
-		m.Predictions.BigRoad.Bet = 2
-		m.Predictions.BigRoad.BetArea = 2
-
-		for _, c := range roadmap.BigEyeRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 2
-				c.Result += b.Result
-			}
-		}
-
-		m.Predictions.BigEyeRoad.Bet = 2
-		m.Predictions.BigEyeRoad.BetArea = 2
-
-		for _, c := range roadmap.SmallRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 2
-				c.Result += b.Result
-			}
-		}
-
-		m.Predictions.SmallRoad.Bet = 2
-		m.Predictions.SmallRoad.BetArea = 2
-
-		for _, c := range roadmap.CockroachRoad.Columns {
-			for _, b := range c.Blocks {
-				b.Result += 2
-				c.Result += b.Result
-			}
-		}
-
-		m.Predictions.CockroachRoad.Bet = 2
-		m.Predictions.CockroachRoad.BetArea = 2
-	}
-	
 	return roadmap
+}
+
+func (m *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern int) {
+	if pattern == 1 {
+		m.AnalyzeWithPatternA(roadmap)
+	}
+	if pattern == 2 {
+		m.AnalyzeWithPatternB(roadmap)
+	}
+}
+
+func (m *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
+	m.PatternAInBigRoad(roadmap.BigRoad)
+}
+
+func (m *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {
+
 }
 
 func GetPatterns() map[int]string {

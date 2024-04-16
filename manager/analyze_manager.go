@@ -118,9 +118,9 @@ func (m *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern in
 
 func (m *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
 	m.PatternAInBigRoad(roadmap.BigRoad)
-	m.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
-	m.PatternAInSmallRoad(roadmap.SmallRoad)
-	m.PatternAInCockroachRoad(roadmap.CockroachRoad)
+	// m.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
+	// m.PatternAInSmallRoad(roadmap.SmallRoad)
+	// m.PatternAInCockroachRoad(roadmap.CockroachRoad)
 }
 
 func (m *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {
@@ -143,19 +143,19 @@ func (m *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 		}
 	}
 
-	for i := 0 ; i < len(r.BigEyeRoad.Columns) ; i++ {
-		r.TotalRoad.Columns[i].Result += r.BigEyeRoad.Columns[i].Result
-		// 如果統計路沒有該行，則要新增到該行
-		if len(r.TotalRoad.Columns) <= i {
-			r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{})
-		}
-		for j := range r.BigEyeRoad.Columns[i].Blocks {
-			// 如果統計路沒有該區塊，則要新增到該行該格的 result
-			if len(r.TotalRoad.Columns[i].Blocks) <= j {
-				r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{})
-			}
-			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigEyeRoad.Columns[i].Blocks[j].Result
-		}
-	}
+	// for i := 0 ; i < len(r.BigEyeRoad.Columns) ; i++ {
+	// 	r.TotalRoad.Columns[i].Result += r.BigEyeRoad.Columns[i].Result
+	// 	// 如果統計路沒有該行，則要新增到該行
+	// 	if len(r.TotalRoad.Columns) <= i {
+	// 		r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{})
+	// 	}
+	// 	for j := range r.BigEyeRoad.Columns[i].Blocks {
+	// 		// 如果統計路沒有該區塊，則要新增到該行該格的 result
+	// 		if len(r.TotalRoad.Columns[i].Blocks) <= j {
+	// 			r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{})
+	// 		}
+	// 		r.TotalRoad.Columns[i].Blocks[j].Result += r.BigEyeRoad.Columns[i].Blocks[j].Result
+	// 	}
+	// }
 
 }

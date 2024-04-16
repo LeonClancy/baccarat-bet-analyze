@@ -136,14 +136,14 @@ func (m *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 		return
 	}
 
-	for i := range r.BigRoad.Columns {
+	for i := 0; i < len(r.BigRoad.Columns) ; i++ {
 		r.TotalRoad.Columns[i].Result += r.BigRoad.Columns[i].Result
 		for j := range r.BigRoad.Columns[i].Blocks {
 			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigRoad.Columns[i].Blocks[j].Result
 		}
 	}
 
-	for i := range r.BigEyeRoad.Columns {
+	for i := 0 ; i < len(r.BigEyeRoad.Columns) ; i++ {
 		r.TotalRoad.Columns[i].Result += r.BigEyeRoad.Columns[i].Result
 		// 如果統計路沒有該行，則要新增到該行
 		if len(r.TotalRoad.Columns) <= i {

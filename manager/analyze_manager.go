@@ -10,20 +10,20 @@ var Patterns = map[int]string{
 }
 
 type AnalyzeManager struct {
-	Pattern1 int
-	Pattern2 int
+	Pattern1    int
+	Pattern2    int
 	Predictions *Predictions `json:"predictions"`
 }
 
 type Predictions struct {
-	BigRoad *Prediction `json:"bigRoad"`
-	BigEyeRoad *Prediction `json:"bigEyeRoad"`
-	SmallRoad *Prediction `json:"smallRoad"`
+	BigRoad       *Prediction `json:"bigRoad"`
+	BigEyeRoad    *Prediction `json:"bigEyeRoad"`
+	SmallRoad     *Prediction `json:"smallRoad"`
 	CockroachRoad *Prediction `json:"cockroachRoad"`
 }
 
 type Prediction struct {
-	Bet int `json:"bet"`
+	Bet     int `json:"bet"`
 	BetArea int `json:"betArea"`
 }
 
@@ -33,26 +33,26 @@ func NewAnalyzeManager() *AnalyzeManager {
 		Pattern2: 0,
 		Predictions: &Predictions{
 			BigRoad: &Prediction{
-				Bet: 0,
+				Bet:     0,
 				BetArea: 0,
 			},
 			BigEyeRoad: &Prediction{
-				Bet: 0,
+				Bet:     0,
 				BetArea: 0,
 			},
 			SmallRoad: &Prediction{
-				Bet: 0,
+				Bet:     0,
 				BetArea: 0,
 			},
 			CockroachRoad: &Prediction{
-				Bet: 0,
+				Bet:     0,
 				BetArea: 0,
 			},
 		},
 	}
 }
 
-func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
+func (analyzeManger *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 	for _, c := range roadmap.TotalRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {
@@ -63,7 +63,7 @@ func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 	for _, c := range roadmap.BigRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {
-			b.Result = 0		
+			b.Result = 0
 		}
 	}
 
@@ -88,55 +88,56 @@ func (m *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 		}
 	}
 
-	m.Predictions.BigEyeRoad.Bet = 0
-	m.Predictions.BigEyeRoad.BetArea = 0
-	m.Predictions.BigRoad.Bet = 0
-	m.Predictions.BigRoad.BetArea = 0
-	m.Predictions.SmallRoad.Bet = 0
-	m.Predictions.SmallRoad.BetArea = 0
-	m.Predictions.CockroachRoad.Bet = 0
-	m.Predictions.CockroachRoad.BetArea = 0
+	analyzeManger.Predictions.BigEyeRoad.Bet = 0
+	analyzeManger.Predictions.BigEyeRoad.BetArea = 0
+	analyzeManger.Predictions.BigRoad.Bet = 0
+	analyzeManger.Predictions.BigRoad.BetArea = 0
+	analyzeManger.Predictions.SmallRoad.Bet = 0
+	analyzeManger.Predictions.SmallRoad.BetArea = 0
+	analyzeManger.Predictions.CockroachRoad.Bet = 0
+	analyzeManger.Predictions.CockroachRoad.BetArea = 0
 
-	m.AnalyzeWithPattern(roadmap, m.Pattern1)
-	m.AnalyzeWithPattern(roadmap, m.Pattern2)
-	
+	analyzeManger.AnalyzeWithPattern(roadmap, analyzeManger.Pattern1)
+	analyzeManger.AnalyzeWithPattern(roadmap, analyzeManger.Pattern2)
+
 	// m.sumResultInTotalRoad(roadmap)
 
 	return roadmap
 }
 
-func (m *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern int) {
+func (analyzeManger *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern int) {
 	if pattern == 1 {
-		m.AnalyzeWithPatternA(roadmap)
-		m.sumResultInTotalRoad(roadmap)
+		analyzeManger.AnalyzeWithPatternA(roadmap)
+		analyzeManger.sumResultInTotalRoad(roadmap)
 	}
 	if pattern == 2 {
-		m.AnalyzeWithPatternB(roadmap)
-		m.sumResultInTotalRoad(roadmap)
+		analyzeManger.AnalyzeWithPatternB(roadmap)
+		analyzeManger.sumResultInTotalRoad(roadmap)
 	}
 }
 
-func (m *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
-	m.PatternAInBigRoad(roadmap.BigRoad)
-	// m.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
+func (analyzeManger *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
+	analyzeManger.PatternAInBigRoad(roadmap.BigRoad)
+	//analyzeManger.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
 	// m.PatternAInSmallRoad(roadmap.SmallRoad)
 	// m.PatternAInCockroachRoad(roadmap.CockroachRoad)
 }
 
-func (m *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {
-
+func (analyzeManger *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {
+	analyzeManger.PatternBInBigRoad(roadmap.BigRoad)
+	//analyzeManger.PatternBInBigEyeRoad(roadmap.BigEyeRoad)
 }
 
 func GetPatterns() map[int]string {
 	return Patterns
 }
 
-func (m *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
+func (analyzeManger *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 	if len(r.TotalRoad.Columns) == 0 {
 		return
 	}
 
-	for i := 0; i < len(r.BigRoad.Columns) ; i++ {
+	for i := 0; i < len(r.BigRoad.Columns); i++ {
 		r.TotalRoad.Columns[i].Result += r.BigRoad.Columns[i].Result
 		for j := range r.BigRoad.Columns[i].Blocks {
 			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigRoad.Columns[i].Blocks[j].Result

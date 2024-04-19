@@ -81,11 +81,35 @@ func (r *RoadmapController) Draw(ctx *context.Context) {
 	}
 	manager.Draw(results)
 	manager.AnalyzeManager.Analyze(manager.Roadmaps)
-	
+
 	response := gmap.New()
 	response.Set("roadmaps", manager.Roadmaps)
 	response.Set("result_counter", manager.ResultCounter)
 	response.Set("predictions", manager.AnalyzeManager.Predictions)
+	err := ctx.Output.JSON(response, false, true)
+	if err != nil {
+		response := gmap.New()
+		response.Set("error", err.Error())
+		ctx.Output.JSON(response, false, true)
+		return
+	}
+}
+
+func (r *RoadmapController) Restore(ctx *context.Context) {
+	roadmapUuid := ctx.Input.Param(":id")
+	roadmapManager, ok := service.RoadmapService.RoadmapManagers[roadmapUuid]
+	if !ok {
+		ctx.Output.SetStatus(404)
+		response := gmap.New()
+		response.Set("error", "roadmap not found")
+		ctx.Output.JSON(response, false, true)
+	}
+	roadmapManager.Restore()
+	roadmapManager.AnalyzeManager.Analyze(roadmapManager.Roadmaps)
+	response := gmap.New()
+	response.Set("roadmaps", roadmapManager.Roadmaps)
+	response.Set("result_counter", roadmapManager.ResultCounter)
+	response.Set("predictions", roadmapManager.AnalyzeManager.Predictions)
 	err := ctx.Output.JSON(response, false, true)
 	if err != nil {
 		response := gmap.New()
@@ -132,7 +156,7 @@ func (r *RoadmapController) SetPatterns(ctx *context.Context) {
 		}
 		manager.AnalyzeManager.Pattern1 = pattern1
 	}
-	
+
 	pattern2Str := ctx.Request.FormValue("pattern2")
 	if pattern2Str != "" {
 		// pattern2Str to int

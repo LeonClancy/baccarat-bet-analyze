@@ -5,7 +5,7 @@ import (
 )
 
 // PatternAInBigRoad patternA 如果遇到莊就打閒，遇到閒就打莊
-func (analyzeManger *AnalyzeManager) PatternAInBigRoad(bigRoad *roadmap.BigRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInBigRoad(bigRoad *roadmap.BigRoad) {
 	if len(bigRoad.Columns) == 0 {
 		return
 	}
@@ -21,16 +21,16 @@ func (analyzeManger *AnalyzeManager) PatternAInBigRoad(bigRoad *roadmap.BigRoad)
 	}
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManger.Predictions.BigRoad.Bet = 1
+		analyzeManager.Predictions.BigRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
-			analyzeManger.Predictions.BigRoad.BetArea = 2
+			analyzeManager.Predictions.BigRoad.BetArea = 2
 		} else {
-			analyzeManger.Predictions.BigRoad.BetArea = 1
+			analyzeManager.Predictions.BigRoad.BetArea = 1
 		}
 	}
 }
 
-func (analyzeManger *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad) {
 	if len(bigEyeRoad.Columns) == 0 {
 		return
 	}
@@ -46,16 +46,16 @@ func (analyzeManger *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.Bi
 	}
 	lastColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManger.Predictions.BigEyeRoad.Bet = 1
+		analyzeManager.Predictions.BigEyeRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
-			analyzeManger.Predictions.BigEyeRoad.BetArea = 2
+			analyzeManager.Predictions.BigEyeRoad.BetArea = 2
 		} else {
-			analyzeManger.Predictions.BigEyeRoad.BetArea = 1
+			analyzeManager.Predictions.BigEyeRoad.BetArea = 1
 		}
 	}
 }
 
-func (analyzeManger *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.SmallRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.SmallRoad) {
 	if len(smallRoad.Columns) == 0 {
 		return
 	}
@@ -71,16 +71,16 @@ func (analyzeManger *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.Smal
 	}
 	lastColumn := smallRoad.Columns[len(smallRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManger.Predictions.SmallRoad.Bet = 1
+		analyzeManager.Predictions.SmallRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
-			analyzeManger.Predictions.SmallRoad.BetArea = 2
+			analyzeManager.Predictions.SmallRoad.BetArea = 2
 		} else {
-			analyzeManger.Predictions.SmallRoad.BetArea = 1
+			analyzeManager.Predictions.SmallRoad.BetArea = 1
 		}
 	}
 }
 
-func (analyzeManger *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *roadmap.CockroachRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *roadmap.CockroachRoad) {
 	if len(cockroachRoad.Columns) == 0 {
 		return
 	}
@@ -96,17 +96,17 @@ func (analyzeManger *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *road
 	}
 	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManger.Predictions.CockroachRoad.Bet = 1
+		analyzeManager.Predictions.CockroachRoad.Bet = 1
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
-			analyzeManger.Predictions.CockroachRoad.BetArea = 2
+			analyzeManager.Predictions.CockroachRoad.BetArea = 2
 		} else {
-			analyzeManger.Predictions.CockroachRoad.BetArea = 1
+			analyzeManager.Predictions.CockroachRoad.BetArea = 1
 		}
 	}
 }
 
 // PatternBInBigRoad patternB 從第2排開始打,打反邊(開藍打紅,開紅打藍)
-func (*AnalyzeManager) PatternBInBigRoad(bigRoad *roadmap.BigRoad) {
+func (analyzeManager *AnalyzeManager) PatternBInBigRoad(bigRoad *roadmap.BigRoad) {
 	if len(bigRoad.Columns) <= 1 {
 		return
 	}
@@ -122,9 +122,19 @@ func (*AnalyzeManager) PatternBInBigRoad(bigRoad *roadmap.BigRoad) {
 			bigRoad.Columns[colIndex].Blocks[1].Result = -1
 		}
 	}
+	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
+	prevColumn := bigRoad.Columns[len(bigRoad.Columns)-2]
+	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
+		analyzeManager.Predictions.BigRoad.Bet = 1
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			analyzeManager.Predictions.BigRoad.BetArea = 2
+		} else {
+			analyzeManager.Predictions.BigRoad.BetArea = 1
+		}
+	}
 }
 
-func (*AnalyzeManager) PatternBInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad) {
+func (analyzeManager *AnalyzeManager) PatternBInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad) {
 	if len(bigEyeRoad.Columns) <= 1 {
 		return
 	}
@@ -140,12 +150,71 @@ func (*AnalyzeManager) PatternBInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad) {
 			bigEyeRoad.Columns[colIndex].Blocks[1].Result = -1
 		}
 	}
+	lastColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns)-1]
+	prevColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns)-2]
+	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
+		analyzeManager.Predictions.BigEyeRoad.Bet = 1
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+		} else {
+			analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+		}
+	}
 }
 
-func (*AnalyzeManager) PatternBInSmallRoad(smallRoad *roadmap.SmallRoad) {
+func (analyzeManager *AnalyzeManager) PatternBInSmallRoad(smallRoad *roadmap.SmallRoad) {
+	if len(smallRoad.Columns) <= 1 {
+		return
+	}
+	if len(smallRoad.Columns[0].Blocks) >= 2 && len(smallRoad.Columns[1].Blocks) >= 2 {
+		smallRoad.Columns[1].Blocks[1].Result = -1
+	}
+	for colIndex := 2; colIndex < len(smallRoad.Columns); colIndex++ {
+		// 前兩行 block 大於等於 2 並且前一行 block 等於 1 的時候，第一顆 Result 等於 1
+		if len(smallRoad.Columns[colIndex-2].Blocks) >= 2 && len(smallRoad.Columns[colIndex-1].Blocks) == 1 {
+			smallRoad.Columns[colIndex].Blocks[0].Result = 1
+		}
+		if len(smallRoad.Columns[colIndex-1].Blocks) >= 2 && len(smallRoad.Columns[colIndex].Blocks) >= 2 {
+			smallRoad.Columns[colIndex].Blocks[1].Result = -1
+		}
+	}
+	lastColumn := smallRoad.Columns[len(smallRoad.Columns)-1]
+	prevColumn := smallRoad.Columns[len(smallRoad.Columns)-2]
+	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
+		analyzeManager.Predictions.SmallRoad.Bet = 1
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			analyzeManager.Predictions.SmallRoad.BetArea = 2
+		} else {
+			analyzeManager.Predictions.SmallRoad.BetArea = 1
+		}
 
+	}
 }
 
-func (*AnalyzeManager) PatternBInCockroachRoad(cockroachRoad *roadmap.CockroachRoad) {
-
+func (analyzeManager *AnalyzeManager) PatternBInCockroachRoad(cockroachRoad *roadmap.CockroachRoad) {
+	if len(cockroachRoad.Columns) <= 1 {
+		return
+	}
+	if len(cockroachRoad.Columns[0].Blocks) >= 2 && len(cockroachRoad.Columns[1].Blocks) >= 2 {
+		cockroachRoad.Columns[1].Blocks[1].Result = -1
+	}
+	for colIndex := 2; colIndex < len(cockroachRoad.Columns); colIndex++ {
+		// 前兩行 block 大於等於 2 並且前一行 block 等於 1 的時候，第一顆 Result 等於 1
+		if len(cockroachRoad.Columns[colIndex-2].Blocks) >= 2 && len(cockroachRoad.Columns[colIndex-1].Blocks) == 1 {
+			cockroachRoad.Columns[colIndex].Blocks[0].Result = 1
+		}
+		if len(cockroachRoad.Columns[colIndex-1].Blocks) >= 2 && len(cockroachRoad.Columns[colIndex].Blocks) >= 2 {
+			cockroachRoad.Columns[colIndex].Blocks[1].Result = -1
+		}
+	}
+	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
+	prevColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-2]
+	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
+		analyzeManager.Predictions.CockroachRoad.Bet = 1
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			analyzeManager.Predictions.CockroachRoad.BetArea = 2
+		} else {
+			analyzeManager.Predictions.CockroachRoad.BetArea = 1
+		}
+	}
 }

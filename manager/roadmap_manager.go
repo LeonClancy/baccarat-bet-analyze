@@ -8,11 +8,11 @@ import (
 )
 
 type RoadmapManager struct {
-	mutex         sync.RWMutex
-	Roadmaps      *roadmap.Roadmap `json:"roadmaps"`
-	previousMaps  *roadmap.Roadmap
-	Name          string `json:"name"`
-	ResultCounter *roadmap.RoadmapsResultCount
+	mutex          sync.RWMutex
+	Roadmaps       *roadmap.Roadmap `json:"roadmaps"`
+	previousMaps   *roadmap.Roadmap
+	Name           string `json:"name"`
+	ResultCounter  *roadmap.RoadmapsResultCount
 	AnalyzeManager *AnalyzeManager
 }
 
@@ -653,7 +653,7 @@ func (r *RoadmapManager) bigEyeRoadNewBlock(latestColumn *roadmap.Column, road *
 		latestColumn.Blocks = append(latestColumn.Blocks, block)
 		return
 	}
-	if latestColumn.Blocks[0] == block {
+	if latestColumn.Blocks[0].Symbol == block.Symbol {
 		latestColumn.Blocks = append(latestColumn.Blocks, block)
 	} else {
 		road.Columns = append(road.Columns,
@@ -669,7 +669,7 @@ func (r *RoadmapManager) smallRoadNewBlock(latestColumn *roadmap.Column, road *r
 		latestColumn.Blocks = append(latestColumn.Blocks, block)
 		return
 	}
-	if latestColumn.Blocks[0] == block {
+	if latestColumn.Blocks[0].Symbol == block.Symbol {
 		latestColumn.Blocks = append(latestColumn.Blocks, block)
 	} else {
 		road.Columns = append(road.Columns,
@@ -685,7 +685,7 @@ func (r *RoadmapManager) cockroachRoadNewBlock(latestColumn *roadmap.Column, roa
 		latestColumn.Blocks = append(latestColumn.Blocks, block)
 		return
 	}
-	if latestColumn.Blocks[0] == block {
+	if latestColumn.Blocks[0].Symbol == block.Symbol {
 		latestColumn.Blocks = append(latestColumn.Blocks, block)
 	} else {
 		road.Columns = append(road.Columns,

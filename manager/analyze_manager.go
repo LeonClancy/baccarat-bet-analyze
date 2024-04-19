@@ -52,7 +52,7 @@ func NewAnalyzeManager() *AnalyzeManager {
 	}
 }
 
-func (analyzeManger *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
+func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
 	for _, c := range roadmap.TotalRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {
@@ -88,51 +88,53 @@ func (analyzeManger *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.
 		}
 	}
 
-	analyzeManger.Predictions.BigEyeRoad.Bet = 0
-	analyzeManger.Predictions.BigEyeRoad.BetArea = 0
-	analyzeManger.Predictions.BigRoad.Bet = 0
-	analyzeManger.Predictions.BigRoad.BetArea = 0
-	analyzeManger.Predictions.SmallRoad.Bet = 0
-	analyzeManger.Predictions.SmallRoad.BetArea = 0
-	analyzeManger.Predictions.CockroachRoad.Bet = 0
-	analyzeManger.Predictions.CockroachRoad.BetArea = 0
+	analyzeManager.Predictions.BigEyeRoad.Bet = 0
+	analyzeManager.Predictions.BigEyeRoad.BetArea = 0
+	analyzeManager.Predictions.BigRoad.Bet = 0
+	analyzeManager.Predictions.BigRoad.BetArea = 0
+	analyzeManager.Predictions.SmallRoad.Bet = 0
+	analyzeManager.Predictions.SmallRoad.BetArea = 0
+	analyzeManager.Predictions.CockroachRoad.Bet = 0
+	analyzeManager.Predictions.CockroachRoad.BetArea = 0
 
-	analyzeManger.AnalyzeWithPattern(roadmap, analyzeManger.Pattern1)
-	analyzeManger.AnalyzeWithPattern(roadmap, analyzeManger.Pattern2)
+	analyzeManager.AnalyzeWithPattern(roadmap, analyzeManager.Pattern1)
+	analyzeManager.AnalyzeWithPattern(roadmap, analyzeManager.Pattern2)
 
 	// m.sumResultInTotalRoad(roadmap)
 
 	return roadmap
 }
 
-func (analyzeManger *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern int) {
+func (analyzeManager *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern int) {
 	if pattern == 1 {
-		analyzeManger.AnalyzeWithPatternA(roadmap)
-		analyzeManger.sumResultInTotalRoad(roadmap)
+		analyzeManager.AnalyzeWithPatternA(roadmap)
+		analyzeManager.sumResultInTotalRoad(roadmap)
 	}
 	if pattern == 2 {
-		analyzeManger.AnalyzeWithPatternB(roadmap)
-		analyzeManger.sumResultInTotalRoad(roadmap)
+		analyzeManager.AnalyzeWithPatternB(roadmap)
+		analyzeManager.sumResultInTotalRoad(roadmap)
 	}
 }
 
-func (analyzeManger *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
-	analyzeManger.PatternAInBigRoad(roadmap.BigRoad)
-	//analyzeManger.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
-	// m.PatternAInSmallRoad(roadmap.SmallRoad)
-	// m.PatternAInCockroachRoad(roadmap.CockroachRoad)
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
+	analyzeManager.PatternAInBigRoad(roadmap.BigRoad)
+	analyzeManager.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
+	analyzeManager.PatternAInSmallRoad(roadmap.SmallRoad)
+	analyzeManager.PatternBInCockroachRoad(roadmap.CockroachRoad)
 }
 
-func (analyzeManger *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {
-	analyzeManger.PatternBInBigRoad(roadmap.BigRoad)
-	//analyzeManger.PatternBInBigEyeRoad(roadmap.BigEyeRoad)
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {
+	analyzeManager.PatternBInBigRoad(roadmap.BigRoad)
+	analyzeManager.PatternBInBigEyeRoad(roadmap.BigEyeRoad)
+	analyzeManager.PatternBInSmallRoad(roadmap.SmallRoad)
+	analyzeManager.PatternBInCockroachRoad(roadmap.CockroachRoad)
 }
 
 func GetPatterns() map[int]string {
 	return Patterns
 }
 
-func (analyzeManger *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
+func (analyzeManager *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 	if len(r.TotalRoad.Columns) == 0 {
 		return
 	}

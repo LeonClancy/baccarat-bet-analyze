@@ -888,6 +888,9 @@ func (r *RoadmapManager) cockroachRoadNewBlock(latestColumn *roadmap.Column, roa
 
 func (r *RoadmapManager) Restore() {
 	r.Roadmaps = &roadmap.Roadmap{
+		TotalRoad: &roadmap.BigRoad{
+			Columns: []*roadmap.Column{},
+		},
 		BeadPlate: &roadmap.BeadPlate{
 			Blocks: []*roadmap.Block{},
 		},
@@ -917,15 +920,34 @@ func (r *RoadmapManager) Restore() {
 		},
 	}
 
+	r.ResultCounter = &roadmap.RoadmapsResultCount{
+		BigRoadCounts:       &roadmap.Result{},
+		BigEyeRoadCounts:    &roadmap.Result{},
+		SmallRoadCounts:     &roadmap.Result{},
+		CockroachRoadCounts: &roadmap.Result{},
+	}
+
 	r.Roadmaps.BeadPlate.Blocks = make([]*roadmap.Block, len(r.previousMaps.BeadPlate.Blocks))
 	copy(r.Roadmaps.BeadPlate.Blocks, r.previousMaps.BeadPlate.Blocks)
 
 	for i := range r.previousMaps.BigRoad.Columns {
 		if len(r.Roadmaps.BigRoad.Columns)-1 < i {
 			r.Roadmaps.BigRoad.Columns = append(r.Roadmaps.BigRoad.Columns, &roadmap.Column{})
+			r.Roadmaps.TotalRoad.Columns = append(r.Roadmaps.TotalRoad.Columns, &roadmap.Column{})
 		}
 		r.Roadmaps.BigRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.previousMaps.BigRoad.Columns[i].Blocks))
+		r.Roadmaps.TotalRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.previousMaps.BigRoad.Columns[i].Blocks))
 		copy(r.Roadmaps.BigRoad.Columns[i].Blocks, r.previousMaps.BigRoad.Columns[i].Blocks)
+		copy(r.Roadmaps.TotalRoad.Columns[i].Blocks, r.previousMaps.BigRoad.Columns[i].Blocks)
+		for blockIndex := range r.previousMaps.BigRoad.Columns[i].Blocks {
+			if r.previousMaps.BigRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Banker {
+				r.ResultCounter.BigRoadCounts.BankerCount++
+			} else if r.previousMaps.BigRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Player {
+				r.ResultCounter.BigRoadCounts.PlayerCount++
+			} else if r.previousMaps.BigRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Tie {
+				r.ResultCounter.BigRoadCounts.TieCount++
+			}
+		}
 	}
 
 	for i := range r.previousMaps.BigEyeRoad.Columns {
@@ -934,6 +956,15 @@ func (r *RoadmapManager) Restore() {
 		}
 		r.Roadmaps.BigEyeRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.previousMaps.BigEyeRoad.Columns[i].Blocks))
 		copy(r.Roadmaps.BigEyeRoad.Columns[i].Blocks, r.previousMaps.BigEyeRoad.Columns[i].Blocks)
+		for blockIndex := range r.previousMaps.BigEyeRoad.Columns[i].Blocks {
+			if r.previousMaps.BigEyeRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Banker {
+				r.ResultCounter.BigEyeRoadCounts.BankerCount++
+			} else if r.previousMaps.BigEyeRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Player {
+				r.ResultCounter.BigEyeRoadCounts.PlayerCount++
+			} else if r.previousMaps.BigEyeRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Tie {
+				r.ResultCounter.BigEyeRoadCounts.TieCount++
+			}
+		}
 	}
 
 	for i := range r.previousMaps.SmallRoad.Columns {
@@ -942,6 +973,15 @@ func (r *RoadmapManager) Restore() {
 		}
 		r.Roadmaps.SmallRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.previousMaps.SmallRoad.Columns[i].Blocks))
 		copy(r.Roadmaps.SmallRoad.Columns[i].Blocks, r.previousMaps.SmallRoad.Columns[i].Blocks)
+		for blockIndex := range r.previousMaps.SmallRoad.Columns[i].Blocks {
+			if r.previousMaps.SmallRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Banker {
+				r.ResultCounter.SmallRoadCounts.BankerCount++
+			} else if r.previousMaps.SmallRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Player {
+				r.ResultCounter.SmallRoadCounts.PlayerCount++
+			} else if r.previousMaps.SmallRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Tie {
+				r.ResultCounter.SmallRoadCounts.TieCount++
+			}
+		}
 	}
 
 	for i := range r.previousMaps.CockroachRoad.Columns {
@@ -950,6 +990,15 @@ func (r *RoadmapManager) Restore() {
 		}
 		r.Roadmaps.CockroachRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.previousMaps.CockroachRoad.Columns[i].Blocks))
 		copy(r.Roadmaps.CockroachRoad.Columns[i].Blocks, r.previousMaps.CockroachRoad.Columns[i].Blocks)
+		for blockIndex := range r.previousMaps.CockroachRoad.Columns[i].Blocks {
+			if r.previousMaps.CockroachRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Banker {
+				r.ResultCounter.CockroachRoadCounts.BankerCount++
+			} else if r.previousMaps.CockroachRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Player {
+				r.ResultCounter.CockroachRoadCounts.PlayerCount++
+			} else if r.previousMaps.CockroachRoad.Columns[i].Blocks[blockIndex].Symbol == roadmap.Symbol_Tie {
+				r.ResultCounter.CockroachRoadCounts.TieCount++
+			}
+		}
 	}
 }
 

@@ -5,6 +5,7 @@ import (
 )
 
 var Patterns = map[int]string{
+	0: "無",
 	1: "A",
 	2: "B",
 }

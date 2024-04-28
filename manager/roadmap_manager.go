@@ -928,6 +928,11 @@ func (r *RoadmapManager) restoreBigRoad() {
 		return
 	}
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
+	if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+		r.ResultCounter.BigRoadCounts.BankerCount--
+	} else {
+		r.ResultCounter.BigRoadCounts.PlayerCount--
+	}
 	if len(lastColumn.Blocks) == 1 {
 		bigRoad.Columns = bigRoad.Columns[:len(bigRoad.Columns)-1]
 		return
@@ -954,6 +959,11 @@ func (r *RoadmapManager) restoreBigEyeRoad() {
 		return
 	}
 	lastColumn := bigEyeRoadmap.Columns[len(bigEyeRoadmap.Columns)-1]
+	if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+		r.ResultCounter.BigEyeRoadCounts.BankerCount--
+	} else {
+		r.ResultCounter.BigEyeRoadCounts.PlayerCount--
+	}
 	if len(lastColumn.Blocks) == 1 {
 		bigEyeRoadmap.Columns = bigEyeRoadmap.Columns[:len(bigEyeRoadmap.Columns)-1]
 		return
@@ -980,6 +990,11 @@ func (r *RoadmapManager) restoreSmallRoad() {
 		return
 	}
 	lastColumn := smallRoadmap.Columns[len(smallRoadmap.Columns)-1]
+	if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+		r.ResultCounter.SmallRoadCounts.BankerCount--
+	} else {
+		r.ResultCounter.SmallRoadCounts.PlayerCount--
+	}
 	if len(lastColumn.Blocks) == 1 {
 		smallRoadmap.Columns = smallRoadmap.Columns[:len(smallRoadmap.Columns)-1]
 		return
@@ -1006,13 +1021,16 @@ func (r *RoadmapManager) restoreCockroachRoad() {
 		return
 	}
 	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
+	if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+		r.ResultCounter.CockroachRoadCounts.BankerCount--
+	} else {
+		r.ResultCounter.CockroachRoadCounts.PlayerCount--
+	}
 	if len(lastColumn.Blocks) == 1 {
 		cockroachRoad.Columns = cockroachRoad.Columns[:len(cockroachRoad.Columns)-1]
 		return
 	}
 	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
-	// also restore previous maps by one block
-	r.restorePreviousCockroachRoad()
 }
 
 func (r *RoadmapManager) restorePreviousCockroachRoad() {

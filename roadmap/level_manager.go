@@ -13,7 +13,7 @@ type LevelManager struct {
 func NewLevelManager() *LevelManager {
 	return &LevelManager{
 		Level: AnalyzeLevel{
-			Levels:       []int32{1, 3, 8, 20},
+			Levels:       []int32{3, 2, 1},
 			Boom:         false,
 			LevelCounter: 0,
 		},

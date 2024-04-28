@@ -154,6 +154,7 @@ func (r *RoadmapManager) Draw(results []dealer.Result) {
 
 	r.drawBeadPlate(symbol)
 	r.drawBigRoad(symbol)
+	r.sumTotalRoadResults()
 	r.drawBigEyeRoad(symbol)
 	r.drawSmallEyeRoad(symbol)
 	r.drawCockroachRoad(symbol)
@@ -278,6 +279,7 @@ func (r *RoadmapManager) convertResultsToSymbol(results []dealer.Result) roadmap
 func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	bigRoad := r.Roadmaps.BigRoad
 	totalRoad := r.Roadmaps.TotalRoad
+	result := 0
 
 	//if len(bigRoad.Columns) == 50 {
 	//	bigRoad.Columns = []*roadmap.Column{}
@@ -319,7 +321,6 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	}
 
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
-	totalRoadLastColumn := totalRoad.Columns[len(totalRoad.Columns)-1]
 
 	if symbol == roadmap.Symbol_Tie ||
 		symbol == roadmap.Symbol_TieAndPlayerPair ||
@@ -366,6 +367,28 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	lastColumnFirstBlock := lastColumn.Blocks[0]
 	lastColumnLastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
 
+	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 {
+		r.restoreTotalRoad()
+		if r.AnalyzeManager.Predictions.TotalRoad.BetArea == 1 {
+			if symbol == roadmap.Symbol_Banker {
+				result = r.AnalyzeManager.Predictions.TotalRoad.Bet
+			}
+			if symbol == roadmap.Symbol_Player {
+				result = -r.AnalyzeManager.Predictions.TotalRoad.Bet
+			}
+		}
+		if r.AnalyzeManager.Predictions.TotalRoad.BetArea == 2 {
+			if symbol == roadmap.Symbol_Player {
+				result = r.AnalyzeManager.Predictions.TotalRoad.Bet
+			}
+			if symbol == roadmap.Symbol_Banker {
+				result = -r.AnalyzeManager.Predictions.TotalRoad.Bet
+			}
+		}
+	}
+
+	totalRoadLastColumn := totalRoad.Columns[len(totalRoad.Columns)-1]
+
 	if symbol == roadmap.Symbol_Banker ||
 		symbol == roadmap.Symbol_BankerAndBankerPair ||
 		symbol == roadmap.Symbol_BankerAndPlayerPair ||
@@ -403,6 +426,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 			totalRoadLastColumn.Blocks = append(totalRoadLastColumn.Blocks, &roadmap.Block{
 				Symbol:   symbol,
 				TieCount: 0,
+				Result:   int32(result),
 			})
 			return
 		} else {
@@ -419,6 +443,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 					{
 						Symbol:   symbol,
 						TieCount: 0,
+						Result:   int32(result),
 					},
 				},
 			})
@@ -462,6 +487,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 			totalRoadLastColumn.Blocks = append(totalRoadLastColumn.Blocks, &roadmap.Block{
 				Symbol:   symbol,
 				TieCount: 0,
+				Result:   int32(result),
 			})
 			return
 		} else {
@@ -478,6 +504,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 					{
 						Symbol:   symbol,
 						TieCount: 0,
+						Result:   int32(result),
 					},
 				},
 			})
@@ -1136,4 +1163,19 @@ func (r *RoadmapManager) restoreTotalRoad() {
 		return
 	}
 	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
+}
+
+func (r *RoadmapManager) sumTotalRoadResults() {
+	// sum total road results in column.Result
+	totalRoad := r.Roadmaps.TotalRoad
+	if len(totalRoad.Columns) == 0 {
+		return
+	}
+	for i := range totalRoad.Columns {
+		total := 0
+		for j := range totalRoad.Columns[i].Blocks {
+			total += int(totalRoad.Columns[i].Blocks[j].Result)
+		}
+		totalRoad.Columns[i].Result = int32(total)
+	}
 }

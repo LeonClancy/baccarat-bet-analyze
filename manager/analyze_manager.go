@@ -59,13 +59,6 @@ func NewAnalyzeManager() *AnalyzeManager {
 }
 
 func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
-	for _, c := range roadmap.TotalRoad.Columns {
-		c.Result = 0
-		for _, b := range c.Blocks {
-			b.Result = 0
-		}
-	}
-
 	for _, c := range roadmap.BigRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {
@@ -94,6 +87,8 @@ func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap
 		}
 	}
 
+	analyzeManager.Predictions.TotalRoad.Bet = 0
+	analyzeManager.Predictions.TotalRoad.BetArea = 0
 	analyzeManager.Predictions.BigEyeRoad.Bet = 0
 	analyzeManager.Predictions.BigEyeRoad.BetArea = 0
 	analyzeManager.Predictions.BigRoad.Bet = 0
@@ -145,26 +140,101 @@ func (analyzeManager *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 		return
 	}
 
-	for i := 0; i < len(r.BigRoad.Columns); i++ {
-		r.TotalRoad.Columns[i].Result += r.BigRoad.Columns[i].Result
-		for j := range r.BigRoad.Columns[i].Blocks {
-			r.TotalRoad.Columns[i].Blocks[j].Result += r.BigRoad.Columns[i].Blocks[j].Result
+	// sum prediction result
+	analyzeManager.sumPredictions(analyzeManager.Predictions)
+	analyzeManager.drawTotalRoad(r.TotalRoad)
+}
+
+func (analyzeManager *AnalyzeManager) sumPredictions(predictions *Predictions) {
+	betArea1Total := 0
+	betArea2Total := 0
+
+	if predictions.BigRoad.Bet != 0 {
+		if predictions.BigRoad.BetArea == 1 {
+			betArea1Total += predictions.BigRoad.Bet
+		} else if predictions.BigRoad.BetArea == 2 {
+			betArea2Total += predictions.BigRoad.Bet
 		}
 	}
 
-	// for i := 0 ; i < len(r.BigEyeRoad.Columns) ; i++ {
-	// 	r.TotalRoad.Columns[i].Result += r.BigEyeRoad.Columns[i].Result
-	// 	// 如果統計路沒有該行，則要新增到該行
-	// 	if len(r.TotalRoad.Columns) <= i {
-	// 		r.TotalRoad.Columns = append(r.TotalRoad.Columns, &roadmap.Column{})
-	// 	}
-	// 	for j := range r.BigEyeRoad.Columns[i].Blocks {
-	// 		// 如果統計路沒有該區塊，則要新增到該行該格的 result
-	// 		if len(r.TotalRoad.Columns[i].Blocks) <= j {
-	// 			r.TotalRoad.Columns[i].Blocks = append(r.TotalRoad.Columns[i].Blocks, &roadmap.Block{})
-	// 		}
-	// 		r.TotalRoad.Columns[i].Blocks[j].Result += r.BigEyeRoad.Columns[i].Blocks[j].Result
-	// 	}
-	// }
+	if predictions.BigEyeRoad.Bet != 0 {
+		if predictions.BigEyeRoad.BetArea == 1 {
+			betArea1Total += predictions.BigEyeRoad.Bet
+		} else if predictions.BigEyeRoad.BetArea == 2 {
+			betArea2Total += predictions.BigEyeRoad.Bet
+		}
+	}
 
+	if predictions.SmallRoad.Bet != 0 {
+		if predictions.SmallRoad.BetArea == 1 {
+			betArea1Total += predictions.SmallRoad.Bet
+		} else if predictions.SmallRoad.BetArea == 2 {
+			betArea2Total += predictions.SmallRoad.Bet
+		}
+	}
+
+	if predictions.CockroachRoad.Bet != 0 {
+		if predictions.CockroachRoad.BetArea == 1 {
+			betArea1Total += predictions.CockroachRoad.Bet
+		} else if predictions.CockroachRoad.BetArea == 2 {
+			betArea2Total += predictions.CockroachRoad.Bet
+		}
+	}
+
+	if betArea1Total > betArea2Total {
+		betArea1Total -= betArea2Total
+		analyzeManager.Predictions.TotalRoad.Bet = betArea1Total
+		analyzeManager.Predictions.TotalRoad.BetArea = 1
+	} else if betArea1Total < betArea2Total {
+		betArea2Total -= betArea1Total
+		analyzeManager.Predictions.TotalRoad.Bet = betArea2Total
+		analyzeManager.Predictions.TotalRoad.BetArea = 2
+	} else {
+		analyzeManager.Predictions.TotalRoad.Bet = 0
+		analyzeManager.Predictions.TotalRoad.BetArea = 0
+	}
+}
+
+// draw Prediction result in Total Road, only draw Result to
+func (analyzeManager *AnalyzeManager) drawTotalRoad(road *roadmap.BigRoad) {
+	if analyzeManager.Predictions.TotalRoad.Bet == 0 {
+		return
+	}
+	lastColumn := road.Columns[len(road.Columns)-1]
+	lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
+
+	if lastBlock.Symbol == roadmap.Symbol_Banker {
+		if analyzeManager.Predictions.TotalRoad.BetArea == 1 {
+			lastColumn.Blocks = append(lastColumn.Blocks, &roadmap.Block{
+				Result: int32(analyzeManager.Predictions.TotalRoad.Bet),
+			})
+			return
+		} else if analyzeManager.Predictions.TotalRoad.BetArea == 2 {
+			road.Columns = append(road.Columns, &roadmap.Column{
+				Blocks: []*roadmap.Block{
+					{
+						Result: int32(analyzeManager.Predictions.TotalRoad.Bet),
+					},
+				},
+			})
+			return
+		}
+	}
+	if lastBlock.Symbol == roadmap.Symbol_Player {
+		if analyzeManager.Predictions.TotalRoad.BetArea == 1 {
+			road.Columns = append(road.Columns, &roadmap.Column{
+				Blocks: []*roadmap.Block{
+					{
+						Result: int32(analyzeManager.Predictions.TotalRoad.Bet),
+					},
+				},
+			})
+			return
+		} else if analyzeManager.Predictions.TotalRoad.BetArea == 2 {
+			lastColumn.Blocks = append(lastColumn.Blocks, &roadmap.Block{
+				Result: int32(analyzeManager.Predictions.TotalRoad.Bet),
+			})
+			return
+		}
+	}
 }

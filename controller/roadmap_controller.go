@@ -169,7 +169,7 @@ func (r *RoadmapController) SetPatterns(ctx *context.Context) {
 		manager.AnalyzeManager.Pattern2 = pattern2
 	}
 
-	manager.AnalyzeManager.Analyze(manager.Roadmaps)
+	//manager.AnalyzeManager.Analyze(manager.Roadmaps)
 
 	response.Set("pattern1", pattern1Str)
 	response.Set("pattern2", pattern2Str)

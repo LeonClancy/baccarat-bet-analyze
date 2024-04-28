@@ -157,7 +157,6 @@ func (r *RoadmapManager) Draw(results []dealer.Result) {
 	r.drawBigEyeRoad(symbol)
 	r.drawSmallEyeRoad(symbol)
 	r.drawCockroachRoad(symbol)
-	r.copyBigRoad2TotalRoad()
 }
 
 func (r *RoadmapManager) Print() *roadmap.Roadmap {
@@ -278,6 +277,7 @@ func (r *RoadmapManager) convertResultsToSymbol(results []dealer.Result) roadmap
 
 func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	bigRoad := r.Roadmaps.BigRoad
+	totalRoad := r.Roadmaps.TotalRoad
 
 	//if len(bigRoad.Columns) == 50 {
 	//	bigRoad.Columns = []*roadmap.Column{}
@@ -285,6 +285,10 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 
 	if len(bigRoad.Columns) == 0 {
 		bigRoad.Columns = append(bigRoad.Columns,
+			&roadmap.Column{
+				Blocks: []*roadmap.Block{},
+			})
+		totalRoad.Columns = append(totalRoad.Columns,
 			&roadmap.Column{
 				Blocks: []*roadmap.Block{},
 			})
@@ -297,9 +301,17 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 				Symbol:   symbol,
 				TieCount: 1,
 			})
+			totalRoad.Columns[0].Blocks = append(totalRoad.Columns[0].Blocks, &roadmap.Block{
+				Symbol:   symbol,
+				TieCount: 1,
+			})
 			return
 		}
 		bigRoad.Columns[0].Blocks = append(bigRoad.Columns[0].Blocks, &roadmap.Block{
+			Symbol:   symbol,
+			TieCount: 0,
+		})
+		totalRoad.Columns[0].Blocks = append(totalRoad.Columns[0].Blocks, &roadmap.Block{
 			Symbol:   symbol,
 			TieCount: 0,
 		})
@@ -307,6 +319,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	}
 
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
+	totalRoadLastColumn := totalRoad.Columns[len(totalRoad.Columns)-1]
 
 	if symbol == roadmap.Symbol_Tie ||
 		symbol == roadmap.Symbol_TieAndPlayerPair ||
@@ -387,9 +400,21 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 				Symbol:   symbol,
 				TieCount: 0,
 			})
+			totalRoadLastColumn.Blocks = append(totalRoadLastColumn.Blocks, &roadmap.Block{
+				Symbol:   symbol,
+				TieCount: 0,
+			})
 			return
 		} else {
 			bigRoad.Columns = append(bigRoad.Columns, &roadmap.Column{
+				Blocks: []*roadmap.Block{
+					{
+						Symbol:   symbol,
+						TieCount: 0,
+					},
+				},
+			})
+			totalRoad.Columns = append(totalRoad.Columns, &roadmap.Column{
 				Blocks: []*roadmap.Block{
 					{
 						Symbol:   symbol,
@@ -434,9 +459,21 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 				Symbol:   symbol,
 				TieCount: 0,
 			})
+			totalRoadLastColumn.Blocks = append(totalRoadLastColumn.Blocks, &roadmap.Block{
+				Symbol:   symbol,
+				TieCount: 0,
+			})
 			return
 		} else {
 			bigRoad.Columns = append(bigRoad.Columns, &roadmap.Column{
+				Blocks: []*roadmap.Block{
+					{
+						Symbol:   symbol,
+						TieCount: 0,
+					},
+				},
+			})
+			totalRoad.Columns = append(totalRoad.Columns, &roadmap.Column{
 				Blocks: []*roadmap.Block{
 					{
 						Symbol:   symbol,

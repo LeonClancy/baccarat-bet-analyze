@@ -467,6 +467,11 @@ func (r *RoadmapManager) drawBigEyeRoad(block roadmap.Symbol) {
 	}
 
 	bigEyeRoad := r.Roadmaps.BigEyeRoad
+	if len(bigEyeRoad.Columns) == 0 {
+		bigEyeRoad.Columns = append(bigEyeRoad.Columns, &roadmap.Column{
+			Blocks: []*roadmap.Block{},
+		})
+	}
 	bigEyeRoadLatestColumn := bigEyeRoad.Columns[0]
 	if len(bigEyeRoad.Columns) > 0 {
 		bigEyeRoadLatestColumn = bigEyeRoad.Columns[len(bigEyeRoad.Columns)-1]
@@ -534,6 +539,11 @@ func (r *RoadmapManager) drawSmallEyeRoad(block roadmap.Symbol) {
 	}
 
 	smallRoad := r.Roadmaps.SmallRoad
+	if len(smallRoad.Columns) == 0 {
+		smallRoad.Columns = append(smallRoad.Columns, &roadmap.Column{
+			Blocks: []*roadmap.Block{},
+		})
+	}
 	smallRoadLatestColumn := smallRoad.Columns[0]
 	if len(smallRoad.Columns) > 0 {
 		smallRoadLatestColumn = smallRoad.Columns[len(smallRoad.Columns)-1]
@@ -602,6 +612,11 @@ func (r *RoadmapManager) drawCockroachRoad(block roadmap.Symbol) {
 	}
 
 	cockroachRoad := r.Roadmaps.CockroachRoad
+	if len(cockroachRoad.Columns) == 0 {
+		cockroachRoad.Columns = append(cockroachRoad.Columns, &roadmap.Column{
+			Blocks: []*roadmap.Block{},
+		})
+	}
 	cockroachRoadLatestColumn := cockroachRoad.Columns[0]
 	if len(cockroachRoad.Columns) > 0 {
 		cockroachRoadLatestColumn = cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
@@ -927,6 +942,9 @@ func (r *RoadmapManager) restoreBigRoad() {
 	if len(bigRoad.Columns) == 0 {
 		return
 	}
+	if len(bigRoad.Columns[0].Blocks) == 0 {
+		return
+	}
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
 	if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 		r.ResultCounter.BigRoadCounts.BankerCount--
@@ -945,6 +963,9 @@ func (r *RoadmapManager) restorePreviousBigRoad() {
 	if len(previousBigRoad.Columns) == 0 {
 		return
 	}
+	if len(previousBigRoad.Columns[0].Blocks) == 0 {
+		return
+	}
 	previousLastColumn := previousBigRoad.Columns[len(previousBigRoad.Columns)-1]
 	if len(previousLastColumn.Blocks) == 1 {
 		previousBigRoad.Columns = previousBigRoad.Columns[:len(previousBigRoad.Columns)-1]
@@ -956,6 +977,9 @@ func (r *RoadmapManager) restorePreviousBigRoad() {
 func (r *RoadmapManager) restoreBigEyeRoad() {
 	bigEyeRoadmap := r.Roadmaps.BigEyeRoad
 	if len(bigEyeRoadmap.Columns) == 0 {
+		return
+	}
+	if len(bigEyeRoadmap.Columns[0].Blocks) == 0 {
 		return
 	}
 	lastColumn := bigEyeRoadmap.Columns[len(bigEyeRoadmap.Columns)-1]
@@ -976,6 +1000,9 @@ func (r *RoadmapManager) restorePreviousBigEyeRoad() {
 	if len(previousBigEyeRoad.Columns) == 0 {
 		return
 	}
+	if len(previousBigEyeRoad.Columns[0].Blocks) == 0 {
+		return
+	}
 	previousLastColumn := previousBigEyeRoad.Columns[len(previousBigEyeRoad.Columns)-1]
 	if len(previousLastColumn.Blocks) == 1 {
 		previousBigEyeRoad.Columns = previousBigEyeRoad.Columns[:len(previousBigEyeRoad.Columns)-1]
@@ -987,6 +1014,9 @@ func (r *RoadmapManager) restorePreviousBigEyeRoad() {
 func (r *RoadmapManager) restoreSmallRoad() {
 	smallRoadmap := r.Roadmaps.SmallRoad
 	if len(smallRoadmap.Columns) == 0 {
+		return
+	}
+	if len(smallRoadmap.Columns[0].Blocks) == 0 {
 		return
 	}
 	lastColumn := smallRoadmap.Columns[len(smallRoadmap.Columns)-1]
@@ -1007,6 +1037,9 @@ func (r *RoadmapManager) restorePreviousSmallRoad() {
 	if len(previousSmallRoad.Columns) == 0 {
 		return
 	}
+	if len(previousSmallRoad.Columns[0].Blocks) == 0 {
+		return
+	}
 	previousLastColumn := previousSmallRoad.Columns[len(previousSmallRoad.Columns)-1]
 	if len(previousLastColumn.Blocks) == 1 {
 		previousSmallRoad.Columns = previousSmallRoad.Columns[:len(previousSmallRoad.Columns)-1]
@@ -1018,6 +1051,9 @@ func (r *RoadmapManager) restorePreviousSmallRoad() {
 func (r *RoadmapManager) restoreCockroachRoad() {
 	cockroachRoad := r.Roadmaps.CockroachRoad
 	if len(cockroachRoad.Columns) == 0 {
+		return
+	}
+	if len(cockroachRoad.Columns[0].Blocks) == 0 {
 		return
 	}
 	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
@@ -1038,6 +1074,9 @@ func (r *RoadmapManager) restorePreviousCockroachRoad() {
 	if len(previousCockroachRoad.Columns) == 0 {
 		return
 	}
+	if len(previousCockroachRoad.Columns[0].Blocks) == 0 {
+		return
+	}
 	previousLastColumn := previousCockroachRoad.Columns[len(previousCockroachRoad.Columns)-1]
 	if len(previousLastColumn.Blocks) == 1 {
 		previousCockroachRoad.Columns = previousCockroachRoad.Columns[:len(previousCockroachRoad.Columns)-1]
@@ -1049,6 +1088,9 @@ func (r *RoadmapManager) restorePreviousCockroachRoad() {
 func (r *RoadmapManager) restoreTotalRoad() {
 	totalRoad := r.Roadmaps.TotalRoad
 	if len(totalRoad.Columns) == 0 {
+		return
+	}
+	if len(totalRoad.Columns[0].Blocks) == 0 {
 		return
 	}
 	lastColumn := totalRoad.Columns[len(totalRoad.Columns)-1]

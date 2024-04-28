@@ -16,27 +16,27 @@ type BeadPlate struct {
 }
 
 type BigRoad struct {
-	Columns []*Column `json:"columns"`
-	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
+	Columns      []*Column `json:"columns"`
+	LevelManager *LevelManager
 }
 
 type BigEyeRoad struct {
-	Columns []*Column `json:"columns"`
-	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
+	Columns      []*Column `json:"columns"`
+	LevelManager *LevelManager
 }
 
 type SmallRoad struct {
-	Columns []*Column `json:"columns"`
-	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
+	Columns      []*Column `json:"columns"`
+	LevelManager *LevelManager
 }
 
 type CockroachRoad struct {
-	Columns []*Column `json:"columns"`
-	AnalyeLevel AnalyeLevel `json:"analyeLevels"`
+	Columns      []*Column `json:"columns"`
+	LevelManager *LevelManager
 }
 
 type Roadmap struct {
-	TotalRoad     *BigRoad	     `json:"totalRoad"`
+	TotalRoad     *BigRoad       `json:"totalRoad"`
 	BeadPlate     *BeadPlate     `json:"beadPlate"`
 	BigRoad       *BigRoad       `json:"bigRoad"`
 	BigEyeRoad    *BigEyeRoad    `json:"bigEyeRoad"`

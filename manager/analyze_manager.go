@@ -21,6 +21,7 @@ type Predictions struct {
 	BigEyeRoad    *Prediction `json:"bigEyeRoad"`
 	SmallRoad     *Prediction `json:"smallRoad"`
 	CockroachRoad *Prediction `json:"cockroachRoad"`
+	TotalRoad     *Prediction `json:"totalRoad"`
 }
 
 type Prediction struct {
@@ -33,6 +34,10 @@ func NewAnalyzeManager() *AnalyzeManager {
 		Pattern1: 0,
 		Pattern2: 0,
 		Predictions: &Predictions{
+			TotalRoad: &Prediction{
+				Bet:     0,
+				BetArea: 0,
+			},
 			BigRoad: &Prediction{
 				Bet:     0,
 				BetArea: 0,

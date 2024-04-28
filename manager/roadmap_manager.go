@@ -28,7 +28,8 @@ func NewRoadmapManager(name string) *RoadmapManager {
 				Blocks: []*roadmap.Block{},
 			},
 			BigRoad: &roadmap.BigRoad{
-				Columns: []*roadmap.Column{},
+				Columns:      []*roadmap.Column{},
+				LevelManager: roadmap.NewLevelManager(),
 			},
 			BigEyeRoad: &roadmap.BigEyeRoad{
 				Columns: []*roadmap.Column{
@@ -36,6 +37,7 @@ func NewRoadmapManager(name string) *RoadmapManager {
 						Blocks: []*roadmap.Block{},
 					},
 				},
+				LevelManager: roadmap.NewLevelManager(),
 			},
 			SmallRoad: &roadmap.SmallRoad{
 				Columns: []*roadmap.Column{
@@ -43,6 +45,7 @@ func NewRoadmapManager(name string) *RoadmapManager {
 						Blocks: []*roadmap.Block{},
 					},
 				},
+				LevelManager: roadmap.NewLevelManager(),
 			},
 			CockroachRoad: &roadmap.CockroachRoad{
 				Columns: []*roadmap.Column{
@@ -50,6 +53,7 @@ func NewRoadmapManager(name string) *RoadmapManager {
 						Blocks: []*roadmap.Block{},
 					},
 				},
+				LevelManager: roadmap.NewLevelManager(),
 			},
 		},
 		previousMaps: &roadmap.Roadmap{
@@ -892,9 +896,13 @@ func (r *RoadmapManager) Restore() {
 
 	r.restoreTotalRoad()
 	r.restoreBigRoad()
+	r.restorePreviousBigRoad()
 	r.restoreBigEyeRoad()
+	r.restorePreviousBigEyeRoad()
 	r.restoreSmallRoad()
+	r.restorePreviousSmallRoad()
 	r.restoreCockroachRoad()
+	r.restorePreviousCockroachRoad()
 }
 
 func (r *RoadmapManager) copyBigRoad2TotalRoad() {
@@ -925,7 +933,9 @@ func (r *RoadmapManager) restoreBigRoad() {
 		return
 	}
 	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
-	// also restore previous maps by one block
+}
+
+func (r *RoadmapManager) restorePreviousBigRoad() {
 	previousBigRoad := r.previousMaps.BigRoad
 	if len(previousBigRoad.Columns) == 0 {
 		return
@@ -949,7 +959,9 @@ func (r *RoadmapManager) restoreBigEyeRoad() {
 		return
 	}
 	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
-	// also restore previous maps by one block
+}
+
+func (r *RoadmapManager) restorePreviousBigEyeRoad() {
 	previousBigEyeRoad := r.previousMaps.BigEyeRoad
 	if len(previousBigEyeRoad.Columns) == 0 {
 		return
@@ -973,7 +985,9 @@ func (r *RoadmapManager) restoreSmallRoad() {
 		return
 	}
 	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
-	// also restore previous maps by one block
+}
+
+func (r *RoadmapManager) restorePreviousSmallRoad() {
 	previousSmallRoad := r.previousMaps.SmallRoad
 	if len(previousSmallRoad.Columns) == 0 {
 		return
@@ -998,6 +1012,10 @@ func (r *RoadmapManager) restoreCockroachRoad() {
 	}
 	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
 	// also restore previous maps by one block
+	r.restorePreviousCockroachRoad()
+}
+
+func (r *RoadmapManager) restorePreviousCockroachRoad() {
 	previousCockroachRoad := r.previousMaps.CockroachRoad
 	if len(previousCockroachRoad.Columns) == 0 {
 		return

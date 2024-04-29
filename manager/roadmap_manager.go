@@ -973,6 +973,9 @@ func (r *RoadmapManager) Restore() {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
+	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 {
+		r.restoreTotalRoad()
+	}
 	r.restoreTotalRoad()
 	r.restoreBigRoad()
 	r.restorePreviousBigRoad()
@@ -982,22 +985,6 @@ func (r *RoadmapManager) Restore() {
 	r.restorePreviousSmallRoad()
 	r.restoreCockroachRoad()
 	r.restorePreviousCockroachRoad()
-}
-
-func (r *RoadmapManager) copyBigRoad2TotalRoad() {
-	bigRoad := r.Roadmaps.BigRoad
-	totalRoad := &roadmap.BigRoad{}
-	for i := range bigRoad.Columns {
-		totalRoad.Columns = append(totalRoad.Columns, &roadmap.Column{})
-		totalRoad.Columns[i].Blocks = make([]*roadmap.Block, len(bigRoad.Columns[i].Blocks))
-		// copy only symbol
-		for j := range bigRoad.Columns[i].Blocks {
-			totalRoad.Columns[i].Blocks[j] = &roadmap.Block{
-				Symbol: bigRoad.Columns[i].Blocks[j].Symbol,
-			}
-		}
-	}
-	r.Roadmaps.TotalRoad = totalRoad
 }
 
 // RestoreBigRoad decrease one block

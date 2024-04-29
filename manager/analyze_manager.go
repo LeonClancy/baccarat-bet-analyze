@@ -214,7 +214,7 @@ func (analyzeManager *AnalyzeManager) drawTotalRoad(road *roadmap.BigRoad) {
 			road.Columns = append(road.Columns, &roadmap.Column{
 				Blocks: []*roadmap.Block{
 					{
-						Symbol: roadmap.Symbol_OnlyResult,
+						Symbol: roadmap.Symbol_OnlyResultAndNewLine,
 						Result: int32(analyzeManager.Predictions.TotalRoad.Bet),
 					},
 				},
@@ -235,7 +235,7 @@ func (analyzeManager *AnalyzeManager) drawTotalRoad(road *roadmap.BigRoad) {
 			return
 		} else if analyzeManager.Predictions.TotalRoad.BetArea == 2 {
 			lastColumn.Blocks = append(lastColumn.Blocks, &roadmap.Block{
-				Symbol: roadmap.Symbol_OnlyResult,
+				Symbol: roadmap.Symbol_OnlyResultAndNewLine,
 				Result: int32(analyzeManager.Predictions.TotalRoad.Bet),
 			})
 			return

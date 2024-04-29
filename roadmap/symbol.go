@@ -25,4 +25,5 @@ const (
 	Symbol_PlayerAndPlayerPairAndTie Symbol = 19
 	Symbol_PlayerAndBothPairAndTie   Symbol = 20
 	Symbol_OnlyResult                Symbol = 21
+	Symbol_OnlyResultAndNewLine      Symbol = 22
 )

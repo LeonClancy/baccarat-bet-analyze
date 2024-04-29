@@ -24,4 +24,5 @@ const (
 	Symbol_PlayerAndBankerPairAndTie Symbol = 18
 	Symbol_PlayerAndPlayerPairAndTie Symbol = 19
 	Symbol_PlayerAndBothPairAndTie   Symbol = 20
+	Symbol_OnlyResult                Symbol = 21
 )

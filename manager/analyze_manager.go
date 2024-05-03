@@ -11,9 +11,15 @@ var Patterns = map[int]string{
 }
 
 type AnalyzeManager struct {
-	Pattern1    int
-	Pattern2    int
-	Predictions *Predictions `json:"predictions"`
+	Pattern1       int
+	Pattern2       int
+	Predictions    *Predictions `json:"predictions"`
+	AskRoadResults *AskRoadResults
+}
+
+type AskRoadResults struct {
+	BankerAskRoadResult *roadmap.AskRoadResult
+	PlayerAskRoadResult *roadmap.AskRoadResult
 }
 
 type Predictions struct {
@@ -55,10 +61,14 @@ func NewAnalyzeManager() *AnalyzeManager {
 				BetArea: 0,
 			},
 		},
+		AskRoadResults: &AskRoadResults{
+			BankerAskRoadResult: &roadmap.AskRoadResult{},
+			PlayerAskRoadResult: &roadmap.AskRoadResult{},
+		},
 	}
 }
 
-func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap.Roadmap {
+func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap, bankerAskRoadResult roadmap.AskRoadResult, playerAskRoadResult roadmap.AskRoadResult) *roadmap.Roadmap {
 	for _, c := range roadmap.BigRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {
@@ -97,6 +107,9 @@ func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap) *roadmap
 	analyzeManager.Predictions.SmallRoad.BetArea = 0
 	analyzeManager.Predictions.CockroachRoad.Bet = 0
 	analyzeManager.Predictions.CockroachRoad.BetArea = 0
+
+	analyzeManager.AskRoadResults.BankerAskRoadResult = &bankerAskRoadResult
+	analyzeManager.AskRoadResults.PlayerAskRoadResult = &playerAskRoadResult
 
 	analyzeManager.AnalyzeWithPattern(roadmap, analyzeManager.Pattern1)
 	analyzeManager.AnalyzeWithPattern(roadmap, analyzeManager.Pattern2)

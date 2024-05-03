@@ -35,6 +35,12 @@ type CockroachRoad struct {
 	LevelManager *LevelManager
 }
 
+type AskRoadResult struct {
+	BigEyeRoadNext    *Block
+	SmallRoadNext     *Block
+	CockroachRoadNext *Block
+}
+
 type Roadmap struct {
 	TotalRoad     *BigRoad       `json:"totalRoad"`
 	BeadPlate     *BeadPlate     `json:"beadPlate"`

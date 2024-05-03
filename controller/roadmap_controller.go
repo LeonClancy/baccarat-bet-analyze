@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/LeonClancy/baccarat-bet-analyze/roadmap"
 	"strconv"
 
 	"github.com/LeonClancy/baccarat-bet-analyze/dealer"
@@ -80,7 +81,9 @@ func (r *RoadmapController) Draw(ctx *context.Context) {
 		results = append(results, dealer.Result_Tie)
 	}
 	manager.Draw(results)
-	manager.AnalyzeManager.Analyze(manager.Roadmaps)
+	bankerAskRoadResult := manager.AskRoad(roadmap.Symbol_Banker)
+	playerAskRoadResult := manager.AskRoad(roadmap.Symbol_Player)
+	manager.AnalyzeManager.Analyze(manager.Roadmaps, bankerAskRoadResult, playerAskRoadResult)
 
 	response := gmap.New()
 	response.Set("roadmaps", manager.Roadmaps)
@@ -105,7 +108,7 @@ func (r *RoadmapController) Restore(ctx *context.Context) {
 		ctx.Output.JSON(response, false, true)
 	}
 	roadmapManager.Restore()
-	roadmapManager.AnalyzeManager.Analyze(roadmapManager.Roadmaps)
+	// roadmapManager.AnalyzeManager.Analyze(roadmapManager.Roadmaps)
 	response := gmap.New()
 	response.Set("roadmaps", roadmapManager.Roadmaps)
 	response.Set("result_counter", roadmapManager.ResultCounter)

@@ -58,10 +58,10 @@ func (analyzeManager *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.B
 	if len(lastColumn.Blocks) > 1 {
 		analyzeManager.Predictions.BigEyeRoad.Bet += int(bigEyeRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
-			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
 			}
-			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
 			}
 		} else {

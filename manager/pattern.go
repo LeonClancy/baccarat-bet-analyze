@@ -66,10 +66,10 @@ func (analyzeManager *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.B
 			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
 			}
 		}
 	}

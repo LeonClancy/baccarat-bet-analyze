@@ -18,21 +18,29 @@ type BeadPlate struct {
 type BigRoad struct {
 	Columns      []*Column `json:"columns"`
 	LevelManager *LevelManager
+	Result       int32
+	TotalBet     int32
 }
 
 type BigEyeRoad struct {
 	Columns      []*Column `json:"columns"`
 	LevelManager *LevelManager
+	Result       int32
+	TotalBet     int32
 }
 
 type SmallRoad struct {
 	Columns      []*Column `json:"columns"`
 	LevelManager *LevelManager
+	Result       int32
+	TotalBet     int32
 }
 
 type CockroachRoad struct {
 	Columns      []*Column `json:"columns"`
 	LevelManager *LevelManager
+	Result       int32
+	TotalBet     int32
 }
 
 type AskRoadResult struct {

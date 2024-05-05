@@ -4,6 +4,13 @@ import "github.com/LeonClancy/baccarat-bet-analyze/roadmap"
 
 func (r *RoadmapManager) AskRoad(symbol roadmap.Symbol) roadmap.AskRoadResult {
 	bigRoad := r.Roadmaps.BigRoad
+	if len(bigRoad.Columns) == 0 {
+		return roadmap.AskRoadResult{
+			BigEyeRoadNext:    &roadmap.Block{Symbol: roadmap.Symbol_BlockDefault},
+			SmallRoadNext:     &roadmap.Block{Symbol: roadmap.Symbol_BlockDefault},
+			CockroachRoadNext: &roadmap.Block{Symbol: roadmap.Symbol_BlockDefault},
+		}
+	}
 	bigRoadLatestColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
 	bigRoadLatestBlock := bigRoadLatestColumn.Blocks[len(bigRoadLatestColumn.Blocks)-1]
 

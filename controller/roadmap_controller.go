@@ -108,7 +108,9 @@ func (r *RoadmapController) Restore(ctx *context.Context) {
 		ctx.Output.JSON(response, false, true)
 	}
 	roadmapManager.Restore()
-	// roadmapManager.AnalyzeManager.Analyze(roadmapManager.Roadmaps)
+	bankerAskRoadResult := roadmapManager.AskRoad(roadmap.Symbol_Banker)
+	playerAskRoadResult := roadmapManager.AskRoad(roadmap.Symbol_Player)
+	roadmapManager.AnalyzeManager.Analyze(roadmapManager.Roadmaps, bankerAskRoadResult, playerAskRoadResult)
 	response := gmap.New()
 	response.Set("roadmaps", roadmapManager.Roadmaps)
 	response.Set("result_counter", roadmapManager.ResultCounter)

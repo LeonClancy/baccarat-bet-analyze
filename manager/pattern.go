@@ -61,14 +61,26 @@ func (analyzeManager *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.B
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
 			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
 			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
 			}
 		}
@@ -104,11 +116,23 @@ func (analyzeManager *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.Sma
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.SmallRoad.BetArea = 2
 			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.SmallRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.SmallRoad.BetArea = 2
+			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.SmallRoad.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.SmallRoad.BetArea = 2
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
+				analyzeManager.Predictions.SmallRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.SmallRoad.BetArea = 2
 			}
 		}
@@ -144,11 +168,23 @@ func (analyzeManager *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *roa
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.CockroachRoad.BetArea = 2
 			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.CockroachRoad.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.CockroachRoad.BetArea = 2
 			}
 		}
@@ -219,11 +255,23 @@ func (analyzeManager *AnalyzeManager) PatternBInBigEyeRoad(bigEyeRoad *roadmap.B
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
 			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
+				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
 			}
 		}
@@ -261,11 +309,23 @@ func (analyzeManager *AnalyzeManager) PatternBInSmallRoad(smallRoad *roadmap.Sma
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.SmallRoad.BetArea = 2
 			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.SmallRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.SmallRoad.BetArea = 2
+			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.SmallRoad.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.SmallRoad.BetArea = 2
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
+				analyzeManager.Predictions.SmallRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.SmallRoad.BetArea = 2
 			}
 		}
@@ -304,11 +364,23 @@ func (analyzeManager *AnalyzeManager) PatternBInCockroachRoad(cockroachRoad *roa
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.CockroachRoad.BetArea = 2
 			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
 				analyzeManager.Predictions.CockroachRoad.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
+				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
 				analyzeManager.Predictions.CockroachRoad.BetArea = 2
 			}
 		}

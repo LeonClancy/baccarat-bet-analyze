@@ -286,6 +286,12 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	//}
 
 	if len(bigRoad.Columns) == 0 {
+		if symbol == roadmap.Symbol_Banker {
+			r.ResultCounter.BigRoadCounts.BankerCount++
+		}
+		if symbol == roadmap.Symbol_Player {
+			r.ResultCounter.BigRoadCounts.PlayerCount++
+		}
 		bigRoad.Columns = append(bigRoad.Columns,
 			&roadmap.Column{
 				Blocks: []*roadmap.Block{},

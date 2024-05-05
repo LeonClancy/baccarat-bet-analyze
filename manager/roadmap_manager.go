@@ -991,6 +991,7 @@ func (r *RoadmapManager) Restore() {
 	r.restorePreviousSmallRoad()
 	r.restoreCockroachRoad()
 	r.restorePreviousCockroachRoad()
+	r.sumTotalRoadResults()
 }
 
 // RestoreBigRoad decrease one block

@@ -4,24 +4,41 @@ import "github.com/LeonClancy/baccarat-bet-analyze/roadmap"
 
 func (r *RoadmapManager) AskRoad(symbol roadmap.Symbol) roadmap.AskRoadResult {
 	bigRoad := r.Roadmaps.BigRoad
-	if len(bigRoad.Columns) == 0 {
+	if len(bigRoad.Columns) < 2 {
 		return roadmap.AskRoadResult{
 			BigEyeRoadNext:    &roadmap.Block{Symbol: roadmap.Symbol_BlockDefault},
 			SmallRoadNext:     &roadmap.Block{Symbol: roadmap.Symbol_BlockDefault},
 			CockroachRoadNext: &roadmap.Block{Symbol: roadmap.Symbol_BlockDefault},
 		}
 	}
+
+	var copyRoadmapManager = NewRoadmapManager("temp")
+	copyBigRoad := copyRoadmapManager.Roadmaps.BigRoad
+	copyTotalRoad := copyRoadmapManager.Roadmaps.TotalRoad
+	copyBigRoad.Columns = make([]*roadmap.Column, len(r.Roadmaps.BigRoad.Columns))
+	copyTotalRoad.Columns = make([]*roadmap.Column, len(r.Roadmaps.TotalRoad.Columns))
+	for i := range r.Roadmaps.BigRoad.Columns {
+		copyBigRoad.Columns[i] = &roadmap.Column{Blocks: []*roadmap.Block{}}
+		copyTotalRoad.Columns[i] = &roadmap.Column{Blocks: []*roadmap.Block{}}
+		copyBigRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.Roadmaps.BigRoad.Columns[i].Blocks))
+		copyTotalRoad.Columns[i].Blocks = make([]*roadmap.Block, len(r.Roadmaps.TotalRoad.Columns[i].Blocks))
+		copy(copyBigRoad.Columns[i].Blocks, r.Roadmaps.BigRoad.Columns[i].Blocks)
+		copy(copyTotalRoad.Columns[i].Blocks, r.Roadmaps.TotalRoad.Columns[i].Blocks)
+	}
+
+	copyRoadmapManager.drawBigRoad(symbol)
+
 	bigRoadLatestColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
 	bigRoadLatestBlock := bigRoadLatestColumn.Blocks[len(bigRoadLatestColumn.Blocks)-1]
 
 	if bigRoadLatestBlock.Symbol == roadmap.Symbol_OnlyResult ||
 		bigRoadLatestBlock.Symbol == roadmap.Symbol_OnlyResultAndNewLine {
-		r.restoreBigRoad()
+		copyRoadmapManager.restoreBigRoad()
 	}
 
-	bigEyeRoadNext := r.askBigEyeRoad(symbol)
-	smallRoadNext := r.askSmallEyeRoad(symbol)
-	cockroachRoadNext := r.askCockroachRoad(symbol)
+	bigEyeRoadNext := copyRoadmapManager.askBigEyeRoad(symbol)
+	smallRoadNext := copyRoadmapManager.askSmallEyeRoad(symbol)
+	cockroachRoadNext := copyRoadmapManager.askCockroachRoad(symbol)
 
 	return roadmap.AskRoadResult{
 		BigEyeRoadNext:    &roadmap.Block{Symbol: bigEyeRoadNext},

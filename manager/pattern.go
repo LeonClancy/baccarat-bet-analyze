@@ -5,7 +5,7 @@ import (
 )
 
 // PatternAInBigRoad patternA 如果遇到莊就打閒，遇到閒就打莊
-func (analyzeManager *AnalyzeManager) PatternAInBigRoad(bigRoad *roadmap.BigRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInBigRoad(bigRoad *roadmap.BigRoad, prediction *Prediction) {
 	bigRoad.LevelManager.ResetLevel()
 	if len(bigRoad.Columns) == 0 {
 		return
@@ -26,16 +26,16 @@ func (analyzeManager *AnalyzeManager) PatternAInBigRoad(bigRoad *roadmap.BigRoad
 	}
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManager.Predictions.BigRoad.Bet += int(bigRoad.LevelManager.GetLevel())
+		prediction.Bet += int(bigRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
-			analyzeManager.Predictions.BigRoad.BetArea = 2
+			prediction.BetArea = 2
 		} else {
-			analyzeManager.Predictions.BigRoad.BetArea = 1
+			prediction.BetArea = 1
 		}
 	}
 }
 
-func (analyzeManager *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad, prediction *Prediction) {
 	bigEyeRoad.LevelManager.ResetLevel()
 	if len(bigEyeRoad.Columns) == 0 {
 		return
@@ -56,28 +56,28 @@ func (analyzeManager *AnalyzeManager) PatternAInBigEyeRoad(bigEyeRoad *roadmap.B
 	}
 	lastColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManager.Predictions.BigEyeRoad.Bet += int(bigEyeRoad.LevelManager.GetLevel())
+		prediction.Bet += int(bigEyeRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			// if last block is banker, next block is player, bet on player
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		} else {
 			// if last block is player, next block is banker, bet on banker
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		}
 	}
 }
 
-func (analyzeManager *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.SmallRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.SmallRoad, prediction *Prediction) {
 	smallRoad.LevelManager.ResetLevel()
 	if len(smallRoad.Columns) == 0 {
 		return
@@ -98,26 +98,26 @@ func (analyzeManager *AnalyzeManager) PatternAInSmallRoad(smallRoad *roadmap.Sma
 	}
 	lastColumn := smallRoad.Columns[len(smallRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManager.Predictions.SmallRoad.Bet += int(smallRoad.LevelManager.GetLevel())
+		prediction.Bet += int(smallRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.SmallRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.SmallRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.SmallRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.SmallRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		}
 	}
 }
 
-func (analyzeManager *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *roadmap.CockroachRoad) {
+func (analyzeManager *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *roadmap.CockroachRoad, prediction *Prediction) {
 	cockroachRoad.LevelManager.ResetLevel()
 	if len(cockroachRoad.Columns) == 0 {
 		return
@@ -138,27 +138,27 @@ func (analyzeManager *AnalyzeManager) PatternAInCockroachRoad(cockroachRoad *roa
 	}
 	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
 	if len(lastColumn.Blocks) > 1 {
-		analyzeManager.Predictions.CockroachRoad.Bet += int(cockroachRoad.LevelManager.GetLevel())
+		prediction.Bet += int(cockroachRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		}
 	}
 }
 
 // PatternBInBigRoad patternB 從第2排開始打,打反邊(開藍打紅,開紅打藍)
-func (analyzeManager *AnalyzeManager) PatternBInBigRoad(bigRoad *roadmap.BigRoad) {
+func (analyzeManager *AnalyzeManager) PatternBInBigRoad(bigRoad *roadmap.BigRoad, prediction *Prediction) {
 	bigRoad.LevelManager.ResetLevel()
 	if len(bigRoad.Columns) <= 1 {
 		return
@@ -181,16 +181,16 @@ func (analyzeManager *AnalyzeManager) PatternBInBigRoad(bigRoad *roadmap.BigRoad
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
 	prevColumn := bigRoad.Columns[len(bigRoad.Columns)-2]
 	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
-		analyzeManager.Predictions.BigRoad.Bet += int(bigRoad.LevelManager.GetLevel())
+		prediction.Bet += int(bigRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
-			analyzeManager.Predictions.BigRoad.BetArea = 2
+			prediction.BetArea = 2
 		} else {
-			analyzeManager.Predictions.BigRoad.BetArea = 1
+			prediction.BetArea = 1
 		}
 	}
 }
 
-func (analyzeManager *AnalyzeManager) PatternBInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad) {
+func (analyzeManager *AnalyzeManager) PatternBInBigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad, prediction *Prediction) {
 	bigEyeRoad.LevelManager.ResetLevel()
 	if len(bigEyeRoad.Columns) <= 1 {
 		return
@@ -213,26 +213,26 @@ func (analyzeManager *AnalyzeManager) PatternBInBigEyeRoad(bigEyeRoad *roadmap.B
 	lastColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns)-1]
 	prevColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns)-2]
 	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
-		analyzeManager.Predictions.BigEyeRoad.Bet += int(bigEyeRoad.LevelManager.GetLevel())
+		prediction.Bet += int(bigEyeRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.BigEyeRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		}
 	}
 }
 
-func (analyzeManager *AnalyzeManager) PatternBInSmallRoad(smallRoad *roadmap.SmallRoad) {
+func (analyzeManager *AnalyzeManager) PatternBInSmallRoad(smallRoad *roadmap.SmallRoad, prediction *Prediction) {
 	smallRoad.LevelManager.ResetLevel()
 	if len(smallRoad.Columns) <= 1 {
 		return
@@ -255,26 +255,26 @@ func (analyzeManager *AnalyzeManager) PatternBInSmallRoad(smallRoad *roadmap.Sma
 	lastColumn := smallRoad.Columns[len(smallRoad.Columns)-1]
 	prevColumn := smallRoad.Columns[len(smallRoad.Columns)-2]
 	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
-		analyzeManager.Predictions.SmallRoad.Bet += int(smallRoad.LevelManager.GetLevel())
+		prediction.Bet += int(smallRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.SmallRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.SmallRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.SmallRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.SmallRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		}
 	}
 }
 
-func (analyzeManager *AnalyzeManager) PatternBInCockroachRoad(cockroachRoad *roadmap.CockroachRoad) {
+func (analyzeManager *AnalyzeManager) PatternBInCockroachRoad(cockroachRoad *roadmap.CockroachRoad, prediction *Prediction) {
 	cockroachRoad.LevelManager.ResetLevel()
 	if len(cockroachRoad.Columns) <= 1 {
 		return
@@ -297,20 +297,20 @@ func (analyzeManager *AnalyzeManager) PatternBInCockroachRoad(cockroachRoad *roa
 	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
 	prevColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-2]
 	if len(lastColumn.Blocks) == 1 && len(prevColumn.Blocks) > 1 {
-		analyzeManager.Predictions.CockroachRoad.Bet += int(cockroachRoad.LevelManager.GetLevel())
+		prediction.Bet += int(cockroachRoad.LevelManager.GetLevel())
 		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		} else {
 			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 1
+				prediction.BetArea = 1
 			}
 			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
-				analyzeManager.Predictions.CockroachRoad.BetArea = 2
+				prediction.BetArea = 2
 			}
 		}
 	}

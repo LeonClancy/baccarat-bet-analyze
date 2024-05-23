@@ -159,7 +159,7 @@ func (r *RoadmapController) SetPatterns(ctx *context.Context) {
 			ctx.Output.JSON(response, false, true)
 			return
 		}
-		manager.AnalyzeManager.Pattern1 = pattern1
+		manager.AnalyzeManager.Pattern1.PatternType = pattern1
 	}
 
 	pattern2Str := ctx.Request.FormValue("pattern2")
@@ -171,7 +171,7 @@ func (r *RoadmapController) SetPatterns(ctx *context.Context) {
 			ctx.Output.JSON(response, false, true)
 			return
 		}
-		manager.AnalyzeManager.Pattern2 = pattern2
+		manager.AnalyzeManager.Pattern2.PatternType = pattern2
 	}
 
 	//manager.AnalyzeManager.Analyze(manager.Roadmaps)

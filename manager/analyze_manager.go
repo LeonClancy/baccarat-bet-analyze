@@ -11,10 +11,15 @@ var Patterns = map[int]string{
 }
 
 type AnalyzeManager struct {
-	Pattern1       int
-	Pattern2       int
+	Pattern1       *Pattern
+	Pattern2       *Pattern
 	Predictions    *Predictions `json:"predictions"`
 	AskRoadResults *AskRoadResults
+}
+
+type Pattern struct {
+	Prediction *Predictions
+	PatternType int
 }
 
 type AskRoadResults struct {
@@ -37,8 +42,56 @@ type Prediction struct {
 
 func NewAnalyzeManager() *AnalyzeManager {
 	return &AnalyzeManager{
-		Pattern1: 0,
-		Pattern2: 0,
+		Pattern1: &Pattern{
+			PatternType: 0,
+			Prediction: &Predictions{
+				TotalRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				BigRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				BigEyeRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				SmallRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				CockroachRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},	
+			},
+		},
+		Pattern2: &Pattern{
+			PatternType: 0,
+			Prediction: &Predictions{
+				TotalRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				BigRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				BigEyeRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				SmallRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},
+				CockroachRoad: &Prediction{
+					Bet:     0,
+					BetArea: 0,
+				},	
+			},
+		},
 		Predictions: &Predictions{
 			TotalRoad: &Prediction{
 				Bet:     0,
@@ -59,7 +112,7 @@ func NewAnalyzeManager() *AnalyzeManager {
 			CockroachRoad: &Prediction{
 				Bet:     0,
 				BetArea: 0,
-			},
+			},	
 		},
 		AskRoadResults: &AskRoadResults{
 			BankerAskRoadResult: &roadmap.AskRoadResult{},
@@ -97,16 +150,7 @@ func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap, bankerAs
 		}
 	}
 
-	analyzeManager.Predictions.TotalRoad.Bet = 0
-	analyzeManager.Predictions.TotalRoad.BetArea = 0
-	analyzeManager.Predictions.BigEyeRoad.Bet = 0
-	analyzeManager.Predictions.BigEyeRoad.BetArea = 0
-	analyzeManager.Predictions.BigRoad.Bet = 0
-	analyzeManager.Predictions.BigRoad.BetArea = 0
-	analyzeManager.Predictions.SmallRoad.Bet = 0
-	analyzeManager.Predictions.SmallRoad.BetArea = 0
-	analyzeManager.Predictions.CockroachRoad.Bet = 0
-	analyzeManager.Predictions.CockroachRoad.BetArea = 0
+	analyzeManager.initPredictions()
 
 	analyzeManager.AskRoadResults.BankerAskRoadResult = &bankerAskRoadResult
 	analyzeManager.AskRoadResults.PlayerAskRoadResult = &playerAskRoadResult
@@ -114,98 +158,36 @@ func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap, bankerAs
 	analyzeManager.AnalyzeWithPattern(roadmap, analyzeManager.Pattern1)
 	analyzeManager.AnalyzeWithPattern(roadmap, analyzeManager.Pattern2)
 
-	// m.sumResultInTotalRoad(roadmap)
+	analyzeManager.sumResultInTotalRoad(roadmap)
 
 	return roadmap
 }
 
-func (analyzeManager *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern int) {
-	if pattern == 1 {
-		analyzeManager.AnalyzeWithPatternA(roadmap)
+func (analyzeManager *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadmap, pattern *Pattern) {
+	if pattern.PatternType == 1 {
+		analyzeManager.AnalyzeWithPatternA(roadmap, pattern)
 	}
-	if pattern == 2 {
-		analyzeManager.AnalyzeWithPatternB(roadmap)
+	if pattern.PatternType == 2 {
+		analyzeManager.AnalyzeWithPatternB(roadmap, pattern)
 	}
-	analyzeManager.sumResultInTotalRoad(roadmap)
 }
 
-func (analyzeManager *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap) {
-	analyzeManager.PatternAInBigRoad(roadmap.BigRoad)
-	analyzeManager.PatternAInBigEyeRoad(roadmap.BigEyeRoad)
-	analyzeManager.PatternAInSmallRoad(roadmap.SmallRoad)
-	analyzeManager.PatternAInCockroachRoad(roadmap.CockroachRoad)
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap, pattern *Pattern) {
+	analyzeManager.PatternAInBigRoad(roadmap.BigRoad, pattern.Prediction.BigRoad)
+	analyzeManager.PatternAInBigEyeRoad(roadmap.BigEyeRoad, pattern.Prediction.BigEyeRoad)
+	analyzeManager.PatternAInSmallRoad(roadmap.SmallRoad, pattern.Prediction.SmallRoad)
+	analyzeManager.PatternAInCockroachRoad(roadmap.CockroachRoad, pattern.Prediction.CockroachRoad)
 }
 
-func (analyzeManager *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap) {
-	analyzeManager.PatternBInBigRoad(roadmap.BigRoad)
-	analyzeManager.PatternBInBigEyeRoad(roadmap.BigEyeRoad)
-	analyzeManager.PatternBInSmallRoad(roadmap.SmallRoad)
-	analyzeManager.PatternBInCockroachRoad(roadmap.CockroachRoad)
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternB(roadmap *roadmap.Roadmap, pattern *Pattern) {
+	analyzeManager.PatternBInBigRoad(roadmap.BigRoad, pattern.Prediction.BigRoad)
+	analyzeManager.PatternBInBigEyeRoad(roadmap.BigEyeRoad, pattern.Prediction.BigEyeRoad)
+	analyzeManager.PatternBInSmallRoad(roadmap.SmallRoad, pattern.Prediction.SmallRoad)
+	analyzeManager.PatternBInCockroachRoad(roadmap.CockroachRoad, pattern.Prediction.CockroachRoad)
 }
 
 func GetPatterns() map[int]string {
 	return Patterns
-}
-
-func (analyzeManager *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
-	if len(r.TotalRoad.Columns) == 0 {
-		return
-	}
-
-	// sum prediction result
-	analyzeManager.sumPredictions(analyzeManager.Predictions)
-	analyzeManager.sumResults(r)
-	analyzeManager.drawTotalRoad(r.TotalRoad)
-}
-
-func (analyzeManager *AnalyzeManager) sumPredictions(predictions *Predictions) {
-	betArea1Total := 0
-	betArea2Total := 0
-
-	if predictions.BigRoad.Bet != 0 {
-		if predictions.BigRoad.BetArea == 1 {
-			betArea1Total += predictions.BigRoad.Bet
-		} else if predictions.BigRoad.BetArea == 2 {
-			betArea2Total += predictions.BigRoad.Bet
-		}
-	}
-
-	if predictions.BigEyeRoad.Bet != 0 {
-		if predictions.BigEyeRoad.BetArea == 1 {
-			betArea1Total += predictions.BigEyeRoad.Bet
-		} else if predictions.BigEyeRoad.BetArea == 2 {
-			betArea2Total += predictions.BigEyeRoad.Bet
-		}
-	}
-
-	if predictions.SmallRoad.Bet != 0 {
-		if predictions.SmallRoad.BetArea == 1 {
-			betArea1Total += predictions.SmallRoad.Bet
-		} else if predictions.SmallRoad.BetArea == 2 {
-			betArea2Total += predictions.SmallRoad.Bet
-		}
-	}
-
-	if predictions.CockroachRoad.Bet != 0 {
-		if predictions.CockroachRoad.BetArea == 1 {
-			betArea1Total += predictions.CockroachRoad.Bet
-		} else if predictions.CockroachRoad.BetArea == 2 {
-			betArea2Total += predictions.CockroachRoad.Bet
-		}
-	}
-
-	if betArea1Total > betArea2Total {
-		betArea1Total -= betArea2Total
-		analyzeManager.Predictions.TotalRoad.Bet = betArea1Total
-		analyzeManager.Predictions.TotalRoad.BetArea = 1
-	} else if betArea1Total < betArea2Total {
-		betArea2Total -= betArea1Total
-		analyzeManager.Predictions.TotalRoad.Bet = betArea2Total
-		analyzeManager.Predictions.TotalRoad.BetArea = 2
-	} else {
-		analyzeManager.Predictions.TotalRoad.Bet = 0
-		analyzeManager.Predictions.TotalRoad.BetArea = 0
-	}
 }
 
 // draw Prediction result in Total Road, only draw Result to
@@ -321,4 +303,39 @@ func (analyzeManager *AnalyzeManager) sumResults(roadmap *roadmap.Roadmap) {
 			}
 		}
 	}
+}
+
+func (analyzeManager *AnalyzeManager) initPredictions() {
+	analyzeManager.Predictions.BigRoad.Bet = 0
+	analyzeManager.Predictions.BigRoad.BetArea = 0
+	analyzeManager.Predictions.BigEyeRoad.Bet = 0
+	analyzeManager.Predictions.BigEyeRoad.BetArea = 0
+	analyzeManager.Predictions.SmallRoad.Bet = 0
+	analyzeManager.Predictions.SmallRoad.BetArea = 0
+	analyzeManager.Predictions.CockroachRoad.Bet = 0
+	analyzeManager.Predictions.CockroachRoad.BetArea = 0
+	analyzeManager.Predictions.TotalRoad.Bet = 0
+	analyzeManager.Predictions.TotalRoad.BetArea = 0
+
+	analyzeManager.Pattern1.Prediction.BigRoad.Bet = 0
+	analyzeManager.Pattern1.Prediction.BigRoad.BetArea = 0
+	analyzeManager.Pattern1.Prediction.BigEyeRoad.Bet = 0
+	analyzeManager.Pattern1.Prediction.BigEyeRoad.BetArea = 0
+	analyzeManager.Pattern1.Prediction.SmallRoad.Bet = 0
+	analyzeManager.Pattern1.Prediction.SmallRoad.BetArea = 0
+	analyzeManager.Pattern1.Prediction.CockroachRoad.Bet = 0
+	analyzeManager.Pattern1.Prediction.CockroachRoad.BetArea = 0
+	analyzeManager.Pattern1.Prediction.TotalRoad.Bet = 0
+	analyzeManager.Pattern1.Prediction.TotalRoad.BetArea = 0
+
+	analyzeManager.Pattern2.Prediction.BigRoad.Bet = 0
+	analyzeManager.Pattern2.Prediction.BigRoad.BetArea = 0
+	analyzeManager.Pattern2.Prediction.BigEyeRoad.Bet = 0
+	analyzeManager.Pattern2.Prediction.BigEyeRoad.BetArea = 0
+	analyzeManager.Pattern2.Prediction.SmallRoad.Bet = 0
+	analyzeManager.Pattern2.Prediction.SmallRoad.BetArea = 0
+	analyzeManager.Pattern2.Prediction.CockroachRoad.Bet = 0
+	analyzeManager.Pattern2.Prediction.CockroachRoad.BetArea = 0
+	analyzeManager.Pattern2.Prediction.TotalRoad.Bet = 0
+	analyzeManager.Pattern2.Prediction.TotalRoad.BetArea = 0
 }

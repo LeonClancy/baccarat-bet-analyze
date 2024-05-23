@@ -373,7 +373,10 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	lastColumnFirstBlock := lastColumn.Blocks[0]
 	lastColumnLastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
 
-	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 {
+	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 ||
+	   r.AnalyzeManager.Predictions.BigRoad.Bet != 0 ||
+	   r.AnalyzeManager.Predictions.BigEyeRoad.Bet != 0 ||
+	   r.AnalyzeManager.Predictions.SmallRoad.Bet != 0 {
 		r.restoreTotalRoad()
 		if r.AnalyzeManager.Predictions.TotalRoad.BetArea == 1 {
 			if symbol == roadmap.Symbol_Banker {
@@ -394,6 +397,14 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 	}
 
 	totalRoadLastColumn := totalRoad.Columns[len(totalRoad.Columns)-1]
+
+	// check totalRoadLastColumn.Blocks invalid memory address or nil pointer dereference
+	// it is weird that totalRoadLastColumn.Blocks is nil
+	if totalRoadLastColumn == nil {
+		totalRoadLastColumn = &roadmap.Column{
+			Blocks: []*roadmap.Block{},
+		}
+	}
 
 	if symbol == roadmap.Symbol_Banker ||
 		symbol == roadmap.Symbol_BankerAndBankerPair ||
@@ -1157,6 +1168,10 @@ func (r *RoadmapManager) restoreTotalRoad() {
 		return
 	}
 	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
+	lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
+	if lastBlock.Symbol == roadmap.Symbol_OnlyResult || lastBlock.Symbol == roadmap.Symbol_OnlyResultAndNewLine {
+		r.restoreTotalRoad()
+	}
 }
 
 func (r *RoadmapManager) sumTotalRoadResults() {

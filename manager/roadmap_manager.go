@@ -337,41 +337,10 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 
 		lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
 		lastBlock.TieCount++
-
-		if lastBlock.Symbol == roadmap.Symbol_Tie ||
-			lastBlock.Symbol == roadmap.Symbol_BankerAndTie ||
-			lastBlock.Symbol == roadmap.Symbol_BankerAndBankerPairAndTie ||
-			lastBlock.Symbol == roadmap.Symbol_BankerAndPlayerPairAndTie ||
-			lastBlock.Symbol == roadmap.Symbol_BankerAndBothPair ||
-			lastBlock.Symbol == roadmap.Symbol_PlayerAndTie ||
-			lastBlock.Symbol == roadmap.Symbol_PlayerAndBankerPairAndTie ||
-			lastBlock.Symbol == roadmap.Symbol_PlayerAndPlayerPairAndTie ||
-			lastBlock.Symbol == roadmap.Symbol_PlayerAndBothPairAndTie {
-			return
-		}
-		switch lastBlock.Symbol {
-		case roadmap.Symbol_Banker:
-			lastBlock.Symbol = roadmap.Symbol_BankerAndTie
-		case roadmap.Symbol_BankerAndBankerPair:
-			lastBlock.Symbol = roadmap.Symbol_BankerAndBankerPairAndTie
-		case roadmap.Symbol_BankerAndPlayerPair:
-			lastBlock.Symbol = roadmap.Symbol_BankerAndPlayerPairAndTie
-		case roadmap.Symbol_BankerAndBothPair:
-			lastBlock.Symbol = roadmap.Symbol_BankerAndBothPairAndTie
-		case roadmap.Symbol_Player:
-			lastBlock.Symbol = roadmap.Symbol_PlayerAndTie
-		case roadmap.Symbol_PlayerAndBankerPair:
-			lastBlock.Symbol = roadmap.Symbol_PlayerAndBankerPairAndTie
-		case roadmap.Symbol_PlayerAndPlayerPair:
-			lastBlock.Symbol = roadmap.Symbol_PlayerAndPlayerPairAndTie
-		case roadmap.Symbol_PlayerAndBothPair:
-			lastBlock.Symbol = roadmap.Symbol_PlayerAndBothPairAndTie
-		}
 		return
 	}
 
 	lastColumnFirstBlock := lastColumn.Blocks[0]
-	lastColumnLastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
 
 	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 ||
 	   r.AnalyzeManager.Predictions.BigRoad.Bet != 0 ||
@@ -406,36 +375,10 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 		}
 	}
 
-	if symbol == roadmap.Symbol_Banker ||
-		symbol == roadmap.Symbol_BankerAndBankerPair ||
-		symbol == roadmap.Symbol_BankerAndPlayerPair ||
-		symbol == roadmap.Symbol_BankerAndBothPair {
+	if symbol == roadmap.Symbol_Banker {
 		r.ResultCounter.BigRoadCounts.BankerCount++
-		if lastColumnLastBlock.Symbol == roadmap.Symbol_Tie ||
-			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndBankerPair ||
-			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndPlayerPair ||
-			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndBothPair {
-			switch symbol {
-			case roadmap.Symbol_Banker:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_BankerAndTie
-			case roadmap.Symbol_BankerAndBankerPair:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_BankerAndBankerPairAndTie
-			case roadmap.Symbol_BankerAndPlayerPair:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_BankerAndPlayerPairAndTie
-			case roadmap.Symbol_BankerAndBothPair:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_BankerAndBothPairAndTie
-			}
-			return
-		}
 
-		if lastColumnFirstBlock.Symbol == roadmap.Symbol_Banker ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_BankerAndBankerPair ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_BankerAndPlayerPair ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_BankerAndBothPair ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_BankerAndTie ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_BankerAndBankerPairAndTie ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_BankerAndPlayerPairAndTie ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_BankerAndBothPairAndTie {
+		if lastColumnFirstBlock.Symbol == roadmap.Symbol_Banker {
 			lastColumn.Blocks = append(lastColumn.Blocks, &roadmap.Block{
 				Symbol:   symbol,
 				TieCount: 0,
@@ -468,35 +411,9 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 		}
 	}
 
-	if symbol == roadmap.Symbol_Player ||
-		symbol == roadmap.Symbol_PlayerAndBankerPair ||
-		symbol == roadmap.Symbol_PlayerAndPlayerPair ||
-		symbol == roadmap.Symbol_PlayerAndBothPair {
+	if symbol == roadmap.Symbol_Player {
 		r.ResultCounter.BigRoadCounts.PlayerCount++
-		if lastColumnLastBlock.Symbol == roadmap.Symbol_Tie ||
-			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndBankerPair ||
-			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndPlayerPair ||
-			lastColumnLastBlock.Symbol == roadmap.Symbol_TieAndBothPair {
-			switch symbol {
-			case roadmap.Symbol_Player:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_PlayerAndTie
-			case roadmap.Symbol_PlayerAndBankerPair:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_PlayerAndBankerPairAndTie
-			case roadmap.Symbol_PlayerAndPlayerPair:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_PlayerAndPlayerPairAndTie
-			case roadmap.Symbol_PlayerAndBothPair:
-				lastColumnLastBlock.Symbol = roadmap.Symbol_PlayerAndBothPairAndTie
-			}
-			return
-		}
-		if lastColumnFirstBlock.Symbol == roadmap.Symbol_Player ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_PlayerAndBankerPair ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_PlayerAndPlayerPair ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_PlayerAndBothPair ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_PlayerAndTie ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_PlayerAndBankerPairAndTie ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_PlayerAndPlayerPairAndTie ||
-			lastColumnFirstBlock.Symbol == roadmap.Symbol_PlayerAndBothPairAndTie {
+		if lastColumnFirstBlock.Symbol == roadmap.Symbol_Player {
 			lastColumn.Blocks = append(lastColumn.Blocks, &roadmap.Block{
 				Symbol:   symbol,
 				TieCount: 0,
@@ -1163,14 +1080,14 @@ func (r *RoadmapManager) restoreTotalRoad() {
 		return
 	}
 	lastColumn := totalRoad.Columns[len(totalRoad.Columns)-1]
-	if len(lastColumn.Blocks) == 1 {
-		totalRoad.Columns = totalRoad.Columns[:len(totalRoad.Columns)-1]
-		return
-	}
-	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
 	lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
+
 	if lastBlock.Symbol == roadmap.Symbol_OnlyResult || lastBlock.Symbol == roadmap.Symbol_OnlyResultAndNewLine {
-		r.restoreTotalRoad()
+		if len(lastColumn.Blocks) == 1 {
+			totalRoad.Columns = totalRoad.Columns[:len(totalRoad.Columns)-1]
+			return
+		}
+		lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
 	}
 }
 

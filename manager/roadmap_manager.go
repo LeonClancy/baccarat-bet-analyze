@@ -154,7 +154,9 @@ func (r *RoadmapManager) Draw(results []dealer.Result) {
 
 	r.drawBeadPlate(symbol)
 	r.drawBigRoad(symbol)
-	r.sumTotalRoadResults()
+	if symbol != roadmap.Symbol_Tie {
+		r.sumTotalRoadResults()
+	}
 	r.drawBigEyeRoad(symbol)
 	r.drawSmallEyeRoad(symbol)
 	r.drawCockroachRoad(symbol)

@@ -18,7 +18,7 @@ type AnalyzeManager struct {
 }
 
 type Pattern struct {
-	Prediction *Predictions
+	Prediction  *Predictions
 	PatternType int
 }
 
@@ -64,7 +64,7 @@ func NewAnalyzeManager() *AnalyzeManager {
 				CockroachRoad: &Prediction{
 					Bet:     0,
 					BetArea: 0,
-				},	
+				},
 			},
 		},
 		Pattern2: &Pattern{
@@ -89,7 +89,7 @@ func NewAnalyzeManager() *AnalyzeManager {
 				CockroachRoad: &Prediction{
 					Bet:     0,
 					BetArea: 0,
-				},	
+				},
 			},
 		},
 		Predictions: &Predictions{
@@ -112,7 +112,7 @@ func NewAnalyzeManager() *AnalyzeManager {
 			CockroachRoad: &Prediction{
 				Bet:     0,
 				BetArea: 0,
-			},	
+			},
 		},
 		AskRoadResults: &AskRoadResults{
 			BankerAskRoadResult: &roadmap.AskRoadResult{},
@@ -122,6 +122,15 @@ func NewAnalyzeManager() *AnalyzeManager {
 }
 
 func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap, bankerAskRoadResult roadmap.AskRoadResult, playerAskRoadResult roadmap.AskRoadResult) *roadmap.Roadmap {
+	bigRoad := roadmap.BigRoad
+	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
+	if len(lastColumn.Blocks) > 1 {
+		lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
+		if lastBlock.TieCount >= 1 {
+			return roadmap
+		}
+	}
+
 	for _, c := range roadmap.BigRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {

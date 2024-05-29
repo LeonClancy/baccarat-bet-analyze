@@ -931,13 +931,15 @@ func (r *RoadmapManager) restoreBigRoad() {
 		return
 	}
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
-	switch lastColumn.Blocks[0].Symbol {
+	lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
+	switch lastBlock.Symbol {
 	case roadmap.Symbol_Banker:
 		r.ResultCounter.BigRoadCounts.BankerCount--
 	case roadmap.Symbol_Player:
 		r.ResultCounter.BigRoadCounts.PlayerCount--
-	case roadmap.Symbol_Tie:
-		r.ResultCounter.BigRoadCounts.TieCount--
+	}
+	if lastBlock.TieCount >= 1 {
+		r.ResultCounter.BigRoadCounts.TieCount -= int(lastBlock.TieCount)
 	}
 	if len(lastColumn.Blocks) == 1 {
 		bigRoad.Columns = bigRoad.Columns[:len(bigRoad.Columns)-1]

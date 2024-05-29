@@ -929,10 +929,13 @@ func (r *RoadmapManager) restoreBigRoad() {
 		return
 	}
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
-	if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+	switch lastColumn.Blocks[0].Symbol {
+	case roadmap.Symbol_Banker:
 		r.ResultCounter.BigRoadCounts.BankerCount--
-	} else {
+	case roadmap.Symbol_Player:
 		r.ResultCounter.BigRoadCounts.PlayerCount--
+	case roadmap.Symbol_Tie:
+		r.ResultCounter.BigRoadCounts.TieCount--
 	}
 	if len(lastColumn.Blocks) == 1 {
 		bigRoad.Columns = bigRoad.Columns[:len(bigRoad.Columns)-1]

@@ -342,10 +342,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 
 	lastColumnFirstBlock := lastColumn.Blocks[0]
 
-	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 ||
-	   r.AnalyzeManager.Predictions.BigRoad.Bet != 0 ||
-	   r.AnalyzeManager.Predictions.BigEyeRoad.Bet != 0 ||
-	   r.AnalyzeManager.Predictions.SmallRoad.Bet != 0 {
+	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 {
 		r.restoreTotalRoad()
 		if r.AnalyzeManager.Predictions.TotalRoad.BetArea == 1 {
 			if symbol == roadmap.Symbol_Banker {
@@ -1088,7 +1085,15 @@ func (r *RoadmapManager) restoreTotalRoad() {
 			return
 		}
 		lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
+		return
 	}
+
+	if len(lastColumn.Blocks) == 1 {
+		totalRoad.Columns = totalRoad.Columns[:len(totalRoad.Columns)-1]
+		return
+	}
+
+	lastColumn.Blocks = lastColumn.Blocks[:len(lastColumn.Blocks)-1]
 }
 
 func (r *RoadmapManager) sumTotalRoadResults() {

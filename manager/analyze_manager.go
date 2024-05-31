@@ -122,15 +122,6 @@ func NewAnalyzeManager() *AnalyzeManager {
 }
 
 func (analyzeManager *AnalyzeManager) Analyze(roadmap *roadmap.Roadmap, bankerAskRoadResult roadmap.AskRoadResult, playerAskRoadResult roadmap.AskRoadResult) *roadmap.Roadmap {
-	bigRoad := roadmap.BigRoad
-	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
-	if len(lastColumn.Blocks) > 1 {
-		lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
-		if lastBlock.TieCount >= 1 {
-			return roadmap
-		}
-	}
-
 	for _, c := range roadmap.BigRoad.Columns {
 		c.Result = 0
 		for _, b := range c.Blocks {
@@ -247,68 +238,72 @@ func (analyzeManager *AnalyzeManager) drawTotalRoad(road *roadmap.BigRoad) {
 	}
 }
 
-func (analyzeManager *AnalyzeManager) sumResults(roadmap *roadmap.Roadmap) {
-	roadmap.TotalRoad.Result = 0
-	roadmap.TotalRoad.TotalBet = 0
-	for i := range roadmap.TotalRoad.Columns {
-		for j := range roadmap.TotalRoad.Columns[i].Blocks {
-			roadmap.TotalRoad.Result += roadmap.TotalRoad.Columns[i].Blocks[j].Result
-			if roadmap.TotalRoad.Columns[i].Blocks[j].Result < 0 {
-				roadmap.TotalRoad.TotalBet -= roadmap.TotalRoad.Columns[i].Blocks[j].Result
-			} else {
-				roadmap.TotalRoad.TotalBet += roadmap.TotalRoad.Columns[i].Blocks[j].Result
+func (analyzeManager *AnalyzeManager) sumResults(r *roadmap.Roadmap) {
+	r.TotalRoad.Result = 0
+	r.TotalRoad.TotalBet = 0
+
+	for i := range r.TotalRoad.Columns {
+		for j := range r.TotalRoad.Columns[i].Blocks {
+			block := r.TotalRoad.Columns[i].Blocks[j]
+			if block.Symbol != roadmap.Symbol_OnlyResult && block.Symbol != roadmap.Symbol_OnlyResultAndNewLine {
+				r.TotalRoad.Result += block.Result
+				if block.Result < 0 {
+					r.TotalRoad.TotalBet -= block.Result
+				} else {
+					r.TotalRoad.TotalBet += block.Result
+				}
 			}
 		}
 	}
 
-	roadmap.BigRoad.Result = 0
-	roadmap.BigRoad.TotalBet = 0
-	for i := range roadmap.BigRoad.Columns {
-		for j := range roadmap.BigRoad.Columns[i].Blocks {
-			roadmap.BigRoad.Result += roadmap.BigRoad.Columns[i].Blocks[j].Result
-			if roadmap.BigRoad.Columns[i].Blocks[j].Result < 0 {
-				roadmap.BigRoad.TotalBet -= roadmap.BigRoad.Columns[i].Blocks[j].Result
+	r.BigRoad.Result = 0
+	r.BigRoad.TotalBet = 0
+	for i := range r.BigRoad.Columns {
+		for j := range r.BigRoad.Columns[i].Blocks {
+			r.BigRoad.Result += r.BigRoad.Columns[i].Blocks[j].Result
+			if r.BigRoad.Columns[i].Blocks[j].Result < 0 {
+				r.BigRoad.TotalBet -= r.BigRoad.Columns[i].Blocks[j].Result
 			} else {
-				roadmap.BigRoad.TotalBet += roadmap.BigRoad.Columns[i].Blocks[j].Result
+				r.BigRoad.TotalBet += r.BigRoad.Columns[i].Blocks[j].Result
 			}
 		}
 	}
 
-	roadmap.BigEyeRoad.Result = 0
-	roadmap.BigEyeRoad.TotalBet = 0
-	for i := range roadmap.BigEyeRoad.Columns {
-		for j := range roadmap.BigEyeRoad.Columns[i].Blocks {
-			roadmap.BigEyeRoad.Result += roadmap.BigEyeRoad.Columns[i].Blocks[j].Result
-			if roadmap.BigEyeRoad.Columns[i].Blocks[j].Result < 0 {
-				roadmap.BigEyeRoad.TotalBet -= roadmap.BigEyeRoad.Columns[i].Blocks[j].Result
+	r.BigEyeRoad.Result = 0
+	r.BigEyeRoad.TotalBet = 0
+	for i := range r.BigEyeRoad.Columns {
+		for j := range r.BigEyeRoad.Columns[i].Blocks {
+			r.BigEyeRoad.Result += r.BigEyeRoad.Columns[i].Blocks[j].Result
+			if r.BigEyeRoad.Columns[i].Blocks[j].Result < 0 {
+				r.BigEyeRoad.TotalBet -= r.BigEyeRoad.Columns[i].Blocks[j].Result
 			} else {
-				roadmap.BigEyeRoad.TotalBet += roadmap.BigEyeRoad.Columns[i].Blocks[j].Result
+				r.BigEyeRoad.TotalBet += r.BigEyeRoad.Columns[i].Blocks[j].Result
 			}
 		}
 	}
 
-	roadmap.SmallRoad.Result = 0
-	roadmap.SmallRoad.TotalBet = 0
-	for i := range roadmap.SmallRoad.Columns {
-		for j := range roadmap.SmallRoad.Columns[i].Blocks {
-			roadmap.SmallRoad.Result += roadmap.SmallRoad.Columns[i].Blocks[j].Result
-			if roadmap.SmallRoad.Columns[i].Blocks[j].Result < 0 {
-				roadmap.SmallRoad.TotalBet -= roadmap.SmallRoad.Columns[i].Blocks[j].Result
+	r.SmallRoad.Result = 0
+	r.SmallRoad.TotalBet = 0
+	for i := range r.SmallRoad.Columns {
+		for j := range r.SmallRoad.Columns[i].Blocks {
+			r.SmallRoad.Result += r.SmallRoad.Columns[i].Blocks[j].Result
+			if r.SmallRoad.Columns[i].Blocks[j].Result < 0 {
+				r.SmallRoad.TotalBet -= r.SmallRoad.Columns[i].Blocks[j].Result
 			} else {
-				roadmap.SmallRoad.TotalBet += roadmap.SmallRoad.Columns[i].Blocks[j].Result
+				r.SmallRoad.TotalBet += r.SmallRoad.Columns[i].Blocks[j].Result
 			}
 		}
 	}
 
-	roadmap.CockroachRoad.Result = 0
-	roadmap.CockroachRoad.TotalBet = 0
-	for i := range roadmap.CockroachRoad.Columns {
-		for j := range roadmap.CockroachRoad.Columns[i].Blocks {
-			roadmap.CockroachRoad.Result += roadmap.CockroachRoad.Columns[i].Blocks[j].Result
-			if roadmap.CockroachRoad.Columns[i].Blocks[j].Result < 0 {
-				roadmap.CockroachRoad.TotalBet -= roadmap.CockroachRoad.Columns[i].Blocks[j].Result
+	r.CockroachRoad.Result = 0
+	r.CockroachRoad.TotalBet = 0
+	for i := range r.CockroachRoad.Columns {
+		for j := range r.CockroachRoad.Columns[i].Blocks {
+			r.CockroachRoad.Result += r.CockroachRoad.Columns[i].Blocks[j].Result
+			if r.CockroachRoad.Columns[i].Blocks[j].Result < 0 {
+				r.CockroachRoad.TotalBet -= r.CockroachRoad.Columns[i].Blocks[j].Result
 			} else {
-				roadmap.CockroachRoad.TotalBet += roadmap.CockroachRoad.Columns[i].Blocks[j].Result
+				r.CockroachRoad.TotalBet += r.CockroachRoad.Columns[i].Blocks[j].Result
 			}
 		}
 	}

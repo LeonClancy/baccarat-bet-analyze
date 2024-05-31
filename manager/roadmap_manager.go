@@ -330,11 +330,7 @@ func (r *RoadmapManager) drawBigRoad(symbol roadmap.Symbol) {
 
 	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
 
-	if symbol == roadmap.Symbol_Tie ||
-		symbol == roadmap.Symbol_TieAndPlayerPair ||
-		symbol == roadmap.Symbol_TieAndBankerPair ||
-		symbol == roadmap.Symbol_TieAndBothPair {
-
+	if symbol == roadmap.Symbol_Tie {
 		r.ResultCounter.BigRoadCounts.TieCount++
 
 		lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]

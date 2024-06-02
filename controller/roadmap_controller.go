@@ -107,10 +107,12 @@ func (r *RoadmapController) Restore(ctx *context.Context) {
 		response.Set("error", "roadmap not found")
 		ctx.Output.JSON(response, false, true)
 	}
-	roadmapManager.Restore()
-	bankerAskRoadResult := roadmapManager.AskRoad(roadmap.Symbol_Banker)
-	playerAskRoadResult := roadmapManager.AskRoad(roadmap.Symbol_Player)
-	roadmapManager.AnalyzeManager.Analyze(roadmapManager.Roadmaps, bankerAskRoadResult, playerAskRoadResult)
+	isTie := roadmapManager.Restore()
+	if !isTie {
+		bankerAskRoadResult := roadmapManager.AskRoad(roadmap.Symbol_Banker)
+		playerAskRoadResult := roadmapManager.AskRoad(roadmap.Symbol_Player)
+		roadmapManager.AnalyzeManager.Analyze(roadmapManager.Roadmaps, bankerAskRoadResult, playerAskRoadResult)
+	}
 	response := gmap.New()
 	response.Set("roadmaps", roadmapManager.Roadmaps)
 	response.Set("result_counter", roadmapManager.ResultCounter)

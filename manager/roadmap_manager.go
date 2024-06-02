@@ -898,9 +898,22 @@ func (r *RoadmapManager) cockroachRoadNewBlock(latestColumn *roadmap.Column, roa
 //	return recalls
 //}
 
-func (r *RoadmapManager) Restore() {
+func (r *RoadmapManager) Restore() bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
+
+	// check big road last block is tie or not
+	if len(r.Roadmaps.BigRoad.Columns) > 0 {
+		lastColumn := r.Roadmaps.BigRoad.Columns[len(r.Roadmaps.BigRoad.Columns)-1]
+		if len(lastColumn.Blocks) > 0 {
+			lastBlock := lastColumn.Blocks[len(lastColumn.Blocks)-1]
+			if lastBlock.TieCount > 0 {
+				r.ResultCounter.BigRoadCounts.TieCount--
+				lastBlock.TieCount--
+				return true
+			}
+		}
+	}
 
 	if r.AnalyzeManager.Predictions.TotalRoad.Bet != 0 {
 		r.restoreTotalRoad()
@@ -915,6 +928,7 @@ func (r *RoadmapManager) Restore() {
 	r.restoreCockroachRoad()
 	r.restorePreviousCockroachRoad()
 	r.sumTotalRoadResults()
+	return false
 }
 
 // RestoreBigRoad decrease one block
@@ -933,9 +947,6 @@ func (r *RoadmapManager) restoreBigRoad() {
 		r.ResultCounter.BigRoadCounts.BankerCount--
 	case roadmap.Symbol_Player:
 		r.ResultCounter.BigRoadCounts.PlayerCount--
-	}
-	if lastBlock.TieCount >= 1 {
-		r.ResultCounter.BigRoadCounts.TieCount -= int(lastBlock.TieCount)
 	}
 	if len(lastColumn.Blocks) == 1 {
 		bigRoad.Columns = bigRoad.Columns[:len(bigRoad.Columns)-1]

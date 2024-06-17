@@ -315,3 +315,154 @@ func (analyzeManager *AnalyzeManager) PatternBInCockroachRoad(cockroachRoad *roa
 		}
 	}
 }
+
+// PatternA1BigRoad 與 PatternA 相反，遇到莊就打莊，遇到閒就打閒
+func (analyzeManager *AnalyzeManager) PatternA1BigRoad(bigRoad *roadmap.BigRoad, prediction *Prediction) {
+	bigRoad.LevelManager.ResetLevel()
+	if len(bigRoad.Columns) == 0 {
+		return
+	}
+	for colIndex := 0; colIndex < len(bigRoad.Columns); colIndex++ {
+		for blockIndex := 0; blockIndex < len(bigRoad.Columns[colIndex].Blocks); blockIndex++ {
+			if blockIndex > 1 {
+				bigRoad.Columns[colIndex].Blocks[blockIndex].Result -= bigRoad.LevelManager.GetLevel()
+				bigRoad.LevelManager.IncreaseLevel()
+			}
+			if colIndex > 0 && blockIndex == 0 {
+				if len(bigRoad.Columns[colIndex-1].Blocks) > 1 {
+					bigRoad.Columns[colIndex].Blocks[blockIndex].Result += bigRoad.LevelManager.GetLevel()
+					bigRoad.LevelManager.ResetLevel()
+				}
+			}
+		}
+	}
+	lastColumn := bigRoad.Columns[len(bigRoad.Columns)-1]
+	if len(lastColumn.Blocks) > 1 {
+		prediction.Bet += int(bigRoad.LevelManager.GetLevel())
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			prediction.BetArea = 1
+		} else {
+			prediction.BetArea = 2
+		}
+	}
+}
+
+func (analyzeManager *AnalyzeManager) PatternA1BigEyeRoad(bigEyeRoad *roadmap.BigEyeRoad, prediction *Prediction) {
+	bigEyeRoad.LevelManager.ResetLevel()
+	if len(bigEyeRoad.Columns) == 0 {
+		return
+	}
+	for colIndex := 0; colIndex < len(bigEyeRoad.Columns); colIndex++ {
+		for blockIndex := 0; blockIndex < len(bigEyeRoad.Columns[colIndex].Blocks); blockIndex++ {
+			if blockIndex > 1 {
+				bigEyeRoad.Columns[colIndex].Blocks[blockIndex].Result -= bigEyeRoad.LevelManager.GetLevel()
+				bigEyeRoad.LevelManager.IncreaseLevel()
+			}
+			if colIndex > 0 && blockIndex == 0 {
+				if len(bigEyeRoad.Columns[colIndex-1].Blocks) > 1 {
+					bigEyeRoad.Columns[colIndex].Blocks[blockIndex].Result += bigEyeRoad.LevelManager.GetLevel()
+					bigEyeRoad.LevelManager.ResetLevel()
+				}
+			}
+		}
+	}
+	lastColumn := bigEyeRoad.Columns[len(bigEyeRoad.Columns)-1]
+	if len(lastColumn.Blocks) > 1 {
+		prediction.Bet += int(bigEyeRoad.LevelManager.GetLevel())
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				prediction.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Banker {
+				prediction.BetArea = 2
+			}
+		} else {
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
+				prediction.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.BigEyeRoadNext.Symbol == roadmap.Symbol_Player {
+				prediction.BetArea = 2
+			}
+		}
+	}
+}
+
+func (analyzeManager *AnalyzeManager) PatternA1SmallRoad(smallRoad *roadmap.SmallRoad, prediction *Prediction) {
+	smallRoad.LevelManager.ResetLevel()
+	if len(smallRoad.Columns) == 0 {
+		return
+	}
+	for colIndex := 0; colIndex < len(smallRoad.Columns); colIndex++ {
+		for blockIndex := 0; blockIndex < len(smallRoad.Columns[colIndex].Blocks); blockIndex++ {
+			if blockIndex > 1 {
+				smallRoad.Columns[colIndex].Blocks[blockIndex].Result -= smallRoad.LevelManager.GetLevel()
+				smallRoad.LevelManager.IncreaseLevel()
+			}
+			if colIndex > 0 && blockIndex == 0 {
+				if len(smallRoad.Columns[colIndex-1].Blocks) > 1 {
+					smallRoad.Columns[colIndex].Blocks[blockIndex].Result += smallRoad.LevelManager.GetLevel()
+					smallRoad.LevelManager.ResetLevel()
+				}
+			}
+		}
+	}
+	lastColumn := smallRoad.Columns[len(smallRoad.Columns)-1]
+	if len(lastColumn.Blocks) > 1 {
+		prediction.Bet += int(smallRoad.LevelManager.GetLevel())
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				prediction.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Banker {
+				prediction.BetArea = 2
+			}
+		} else {
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
+				prediction.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.SmallRoadNext.Symbol == roadmap.Symbol_Player {
+				prediction.BetArea = 2
+			}
+		}
+	}
+}
+
+func (analyzeManager *AnalyzeManager) PatternA1CockroachRoad(cockroachRoad *roadmap.CockroachRoad, prediction *Prediction) {
+	cockroachRoad.LevelManager.ResetLevel()
+	if len(cockroachRoad.Columns) == 0 {
+		return
+	}
+	for colIndex := 0; colIndex < len(cockroachRoad.Columns); colIndex++ {
+		for blockIndex := 0; blockIndex < len(cockroachRoad.Columns[colIndex].Blocks); blockIndex++ {
+			if blockIndex > 1 {
+				cockroachRoad.Columns[colIndex].Blocks[blockIndex].Result -= cockroachRoad.LevelManager.GetLevel()
+				cockroachRoad.LevelManager.IncreaseLevel()
+			}
+			if colIndex > 0 && blockIndex == 0 {
+				if len(cockroachRoad.Columns[colIndex-1].Blocks) > 1 {
+					cockroachRoad.Columns[colIndex].Blocks[blockIndex].Result += cockroachRoad.LevelManager.GetLevel()
+					cockroachRoad.LevelManager.ResetLevel()
+				}
+			}
+		}
+	}
+	lastColumn := cockroachRoad.Columns[len(cockroachRoad.Columns)-1]
+	if len(lastColumn.Blocks) > 1 {
+		prediction.Bet += int(cockroachRoad.LevelManager.GetLevel())
+		if lastColumn.Blocks[0].Symbol == roadmap.Symbol_Banker {
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				prediction.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Banker {
+				prediction.BetArea = 2
+			}
+		} else {
+			if analyzeManager.AskRoadResults.BankerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
+				prediction.BetArea = 1
+			}
+			if analyzeManager.AskRoadResults.PlayerAskRoadResult.CockroachRoadNext.Symbol == roadmap.Symbol_Player {
+				prediction.BetArea = 2
+			}
+		}
+	}
+}

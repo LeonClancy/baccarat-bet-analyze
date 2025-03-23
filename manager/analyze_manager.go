@@ -9,6 +9,10 @@ var Patterns = map[int]string{
 	1: "A",
 	2: "B",
 	3: "A1",
+	4: "A3",
+	5: "A5",
+	6: "B3",
+	7: "B5",
 }
 
 type AnalyzeManager struct {
@@ -174,6 +178,18 @@ func (analyzeManager *AnalyzeManager) AnalyzeWithPattern(roadmap *roadmap.Roadma
 	if pattern.PatternType == 3 {
 		analyzeManager.AnalyzeWithPatternA1(roadmap, pattern)
 	}
+	if pattern.PatternType == 4 {
+		analyzeManager.AnalyzeWithPatternA3(roadmap, pattern)
+	}
+	if pattern.PatternType == 5 {
+		analyzeManager.AnalyzeWithPatternA5(roadmap, pattern)
+	}
+	if pattern.PatternType == 6 {
+		analyzeManager.AnalyzeWithPatternB3(roadmap, pattern)
+	}
+	if pattern.PatternType == 7 {
+		analyzeManager.AnalyzeWithPatternB5(roadmap, pattern)
+	}
 }
 
 func (analyzeManager *AnalyzeManager) AnalyzeWithPatternA(roadmap *roadmap.Roadmap, pattern *Pattern) {
@@ -195,6 +211,34 @@ func (analyzeManager *AnalyzeManager) AnalyzeWithPatternA1(roadmap *roadmap.Road
 	analyzeManager.PatternA1BigEyeRoad(roadmap.BigEyeRoad, pattern.Prediction.BigEyeRoad)
 	analyzeManager.PatternA1SmallRoad(roadmap.SmallRoad, pattern.Prediction.SmallRoad)
 	analyzeManager.PatternA1CockroachRoad(roadmap.CockroachRoad, pattern.Prediction.CockroachRoad)
+}
+
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternA3(roadmap *roadmap.Roadmap, pattern *Pattern) {
+	analyzeManager.PatternA3BigRoad(roadmap.BigRoad, pattern.Prediction.BigRoad)
+	analyzeManager.PatternA3BigEyeRoad(roadmap.BigEyeRoad, pattern.Prediction.BigEyeRoad)
+	analyzeManager.PatternA3SmallRoad(roadmap.SmallRoad, pattern.Prediction.SmallRoad)
+	analyzeManager.PatternA3CockroachRoad(roadmap.CockroachRoad, pattern.Prediction.CockroachRoad)
+}
+
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternA5(roadmap *roadmap.Roadmap, pattern *Pattern) {
+	analyzeManager.PatternA5BigRoad(roadmap.BigRoad, pattern.Prediction.BigRoad)
+	analyzeManager.PatternA5BigEyeRoad(roadmap.BigEyeRoad, pattern.Prediction.BigEyeRoad)
+	analyzeManager.PatternA5SmallRoad(roadmap.SmallRoad, pattern.Prediction.SmallRoad)
+	analyzeManager.PatternA5CockroachRoad(roadmap.CockroachRoad, pattern.Prediction.CockroachRoad)
+}
+
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternB3(roadmap *roadmap.Roadmap, pattern *Pattern) {
+	analyzeManager.PatternB3BigRoad(roadmap.BigRoad, pattern.Prediction.BigRoad)
+	analyzeManager.PatternB3BigEyeRoad(roadmap.BigEyeRoad, pattern.Prediction.BigEyeRoad)
+	analyzeManager.PatternB3SmallRoad(roadmap.SmallRoad, pattern.Prediction.SmallRoad)
+	analyzeManager.PatternB3CockroachRoad(roadmap.CockroachRoad, pattern.Prediction.CockroachRoad)
+}
+
+func (analyzeManager *AnalyzeManager) AnalyzeWithPatternB5(roadmap *roadmap.Roadmap, pattern *Pattern) {
+	analyzeManager.PatternB5BigRoad(roadmap.BigRoad, pattern.Prediction.BigRoad)
+	analyzeManager.PatternB5BigEyeRoad(roadmap.BigEyeRoad, pattern.Prediction.BigEyeRoad)
+	analyzeManager.PatternB5SmallRoad(roadmap.SmallRoad, pattern.Prediction.SmallRoad)
+	analyzeManager.PatternB5CockroachRoad(roadmap.CockroachRoad, pattern.Prediction.CockroachRoad)
 }
 
 func GetPatterns() map[int]string {

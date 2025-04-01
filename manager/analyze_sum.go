@@ -9,6 +9,15 @@ func (analyzeManager *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 		return
 	}
 
+	if analyzeManager.Pattern1.PatternType == 4 && analyzeManager.Pattern2.PatternType == 6 {
+		if len(r.TotalRoad.Columns) > 0 {
+			if len(r.TotalRoad.Columns[len(r.TotalRoad.Columns)-1].Blocks) >= 4 {
+				analyzeManager.initPredictions()
+			}
+		}
+	}
+
+
 	// sum prediction result
 	analyzeManager.sumBigRaodPredicitons(analyzeManager.Pattern1.Prediction.BigRoad, analyzeManager.Pattern2.Prediction.BigRoad)
 	analyzeManager.sumBigEyeRaodPredicitons(analyzeManager.Pattern1.Prediction.BigEyeRoad, analyzeManager.Pattern2.Prediction.BigEyeRoad)
@@ -16,6 +25,15 @@ func (analyzeManager *AnalyzeManager) sumResultInTotalRoad(r *roadmap.Roadmap) {
 	analyzeManager.sumCockroachRaodPredicitons(analyzeManager.Pattern1.Prediction.CockroachRoad, analyzeManager.Pattern2.Prediction.CockroachRoad)
 	
 	analyzeManager.sumPredictions(analyzeManager.Predictions)
+
+	if analyzeManager.Pattern1.PatternType == 5 && analyzeManager.Pattern2.PatternType == 7 {
+		if len(r.TotalRoad.Columns) > 0 {
+			if len(r.TotalRoad.Columns[len(r.TotalRoad.Columns)-1].Blocks) >= 4 {
+				analyzeManager.reversePredictions()
+			}
+		}
+	}
+
 	analyzeManager.sumResults(r)
 	analyzeManager.drawTotalRoad(r.TotalRoad)
 }

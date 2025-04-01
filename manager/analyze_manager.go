@@ -398,3 +398,14 @@ func (analyzeManager *AnalyzeManager) initPredictions() {
 	analyzeManager.Pattern2.Prediction.TotalRoad.Bet = 0
 	analyzeManager.Pattern2.Prediction.TotalRoad.BetArea = 0
 }
+
+func (analyzeManager *AnalyzeManager) reversePredictions() {
+	if analyzeManager.Predictions.TotalRoad.Bet == 0 {
+		return
+	}
+	if analyzeManager.Predictions.TotalRoad.BetArea == 1 {
+		analyzeManager.Predictions.TotalRoad.BetArea = 2
+	} else if analyzeManager.Predictions.TotalRoad.BetArea == 2 {
+		analyzeManager.Predictions.TotalRoad.BetArea = 1
+	}
+}

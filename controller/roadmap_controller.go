@@ -176,11 +176,13 @@ func (r *RoadmapController) SetPatterns(ctx *context.Context) {
 		manager.AnalyzeManager.Pattern2.PatternType = pattern2
 	}
 
-	//manager.AnalyzeManager.Analyze(manager.Roadmaps)
+	bankerAskRoadResult := manager.AskRoad(roadmap.Symbol_Banker)
+	playerAskRoadResult := manager.AskRoad(roadmap.Symbol_Player)
+	roadmap := manager.AnalyzeManager.Analyze(manager.Roadmaps, bankerAskRoadResult, playerAskRoadResult)
 
 	response.Set("pattern1", pattern1Str)
 	response.Set("pattern2", pattern2Str)
-	response.Set("roadmaps", manager.Roadmaps)
+	response.Set("roadmaps", roadmap)
 	response.Set("predictions", manager.AnalyzeManager.Predictions)
 	err := ctx.Output.JSON(response, false, true)
 	if err != nil {
